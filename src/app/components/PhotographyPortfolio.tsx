@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "motion/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import Masonry from "react-responsive-masonry";
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 
 interface PhotographyPortfolioProps {
   scrollProgress: number;
@@ -138,29 +138,13 @@ export function PhotographyPortfolio({ scrollProgress }: PhotographyPortfolioPro
           transition={{ duration: 0.5 }}
           className="overflow-auto max-h-[calc(100vh-14rem)] pr-1"
         >
-          <Masonry columnsCount={1} gutter="16px" className="md:hidden">
-            {galleries[currentGallery].images.map((image, index) => (
-              <GalleryImage key={index} src={image} index={index} />
-            ))}
-          </Masonry>
-
-          <Masonry columnsCount={2} gutter="16px" className="hidden md:block lg:hidden">
-            {galleries[currentGallery].images.map((image, index) => (
-              <GalleryImage key={index} src={image} index={index} />
-            ))}
-          </Masonry>
-
-          <Masonry columnsCount={3} gutter="16px" className="hidden lg:block xl:hidden">
-            {galleries[currentGallery].images.map((image, index) => (
-              <GalleryImage key={index} src={image} index={index} />
-            ))}
-          </Masonry>
-
-          <Masonry columnsCount={4} gutter="16px" className="hidden xl:block">
-            {galleries[currentGallery].images.map((image, index) => (
-              <GalleryImage key={index} src={image} index={index} />
-            ))}
-          </Masonry>
+          <ResponsiveMasonry columnsCountBreakPoints={{ 0: 1, 768: 2, 1024: 3, 1280: 4 }}>
+            <Masonry gutter="10px">
+              {galleries[currentGallery].images.map((image, index) => (
+                <GalleryImage key={index} src={image} index={index} />
+              ))}
+            </Masonry>
+          </ResponsiveMasonry>
         </motion.div>
 
         {/* Gallery counter */}
@@ -186,7 +170,7 @@ function GalleryImage({ src, index }: GalleryImageProps) {
   return (
     <motion.div
       initial={false}
-      className="group relative overflow-hidden border border-[var(--dark-grey)] bg-[var(--card)] hover:border-[var(--metallic-silver)] transition-all duration-300 max-w-[320px] mx-auto"
+      className="group relative w-full overflow-hidden border border-[var(--dark-grey)] bg-[var(--card)] hover:border-[var(--metallic-silver)] transition-all duration-300"
     >
       <div className="h-6 bg-[var(--primary)] border-b border-black px-2 flex items-center">
         <span className="font-mono text-[11px] text-[var(--deep-black)]">IMG_{String(index + 1).padStart(3, "0")}.RAW</span>
