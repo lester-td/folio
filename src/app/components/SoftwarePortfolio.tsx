@@ -7,58 +7,64 @@ interface SoftwarePortfolioProps {
 
 const projects = [
   {
-    title: "RafflesGo",
+    title: "Lorem Ipsum Alpha",
     description:
-      "High-performance raffle management system with real-time participant tracking and automated winner selection",
-    tech: ["Python", "Flask", "Redis", "PostgreSQL"],
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    tech: ["Lorem", "Ipsum", "Dolor", "Sit"],
     repo: "https://github.com",
-    label: "APP_01",
-    metric: "COMMITS: 842",
+    label: "repo_01",
+    source: "github",
+    image: "https://picsum.photos/seed/repo-01/800/450",
   },
   {
-    title: "Infrastructure Automation",
+    title: "Dolor Sit Beta",
     description:
-      "Container orchestration pipeline with automated deployment, monitoring, and rollback capabilities",
-    tech: ["Docker", "Kubernetes", "Terraform", "GitHub Actions"],
+      "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    tech: ["Amet", "Consectetur", "Adipiscing", "Elit"],
     repo: "https://github.com",
-    label: "SYS_02",
-    metric: "UPTIME: 99.9%",
+    label: "repo_02",
+    source: "gitlab",
+    image: "https://picsum.photos/seed/repo-02/800/450",
   },
   {
-    title: "API Gateway",
+    title: "Amet Gamma",
     description:
-      "Scalable API gateway with rate limiting, authentication, and request routing for microservices architecture",
-    tech: ["Nginx", "Node.js", "Redis", "OAuth2"],
+      "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+    tech: ["Tempor", "Incididunt", "Labore", "Magna"],
     repo: "https://github.com",
-    label: "API_03",
-    metric: "REQ/S: 14.2K",
+    label: "repo_03",
+    source: "patchii",
+    image: "https://picsum.photos/seed/repo-03/800/450",
   },
   {
-    title: "Data Pipeline",
+    title: "Consectetur Delta",
     description:
-      "ETL pipeline for processing and analyzing large-scale event data with real-time streaming capabilities",
-    tech: ["Python", "Apache Kafka", "Spark", "Airflow"],
+      "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    tech: ["Aliqua", "Veniam", "Nostrud", "Exercitation"],
     repo: "https://github.com",
-    label: "ETL_04",
-    metric: "JOBS/DAY: 320",
+    label: "repo_04",
+    source: "github",
+    image: "https://picsum.photos/seed/repo-04/800/450",
   },
   {
-    title: "Monitoring Stack",
+    title: "Adipiscing Epsilon",
     description:
-      "Comprehensive observability platform with custom metrics, logging aggregation, and alerting system",
-    tech: ["Prometheus", "Grafana", "ELK Stack", "Alert Manager"],
+      "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.",
+    tech: ["Ullamco", "Laboris", "Commodo", "Consequat"],
     repo: "https://github.com",
-    label: "MON_05",
-    metric: "ALERTS: 42",
+    label: "repo_05",
+    source: "gitlab",
+    image: "https://picsum.photos/seed/repo-05/800/450",
   },
   {
-    title: "CI/CD Platform",
+    title: "Tempor Zeta",
     description:
-      "End-to-end continuous integration and deployment platform with multi-environment support and rollback",
-    tech: ["Jenkins", "ArgoCD", "Docker", "Kubernetes"],
+      "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos.",
+    tech: ["Reprehenderit", "Voluptate", "Fugiat", "Pariatur"],
     repo: "https://github.com",
-    label: "CI_06",
-    metric: "DEPLOYS/WK: 61",
+    label: "repo_06",
+    source: "patchii",
+    image: "https://picsum.photos/seed/repo-06/800/450",
   },
 ];
 
@@ -81,19 +87,17 @@ export function SoftwarePortfolio({ scrollProgress }: SoftwarePortfolioProps) {
       }}
     >
       <div className="max-w-7xl mx-auto">
-        <div className="h-14 border border-[var(--dark-grey)] bg-[var(--card)] px-4 flex items-center justify-between mb-5">
-          <div className="flex items-center gap-3">
-            <h2 className="font-mono text-lg md:text-2xl text-[var(--metallic-silver)]">SOFTWARE_PORTFOLIO</h2>
-            <div className="h-4 w-px bg-[var(--dark-grey)]" />
-            <span className="font-mono text-xs text-[var(--metallic-accent)]">DIR: /PROJECTS/ACTIVE</span>
+        <div className="border border-[var(--dark-grey)]">
+          <div className="h-6 border-b border-black bg-[var(--primary)] px-2 flex items-center justify-between">
+            <span className="font-mono text-[11px] text-[var(--deep-black)] tracking-wide">lester.page</span>
+            <span className="font-mono text-[11px] text-[var(--deep-black)]">code</span>
           </div>
-          <span className="font-mono text-xs text-[var(--metallic-accent)]">STATUS: ONLINE</span>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-[var(--dark-grey)] border border-[var(--dark-grey)]">
-          {projects.map((project, index) => (
-            <ProjectCard key={index} project={project} index={index} />
-          ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-[var(--dark-grey)]">
+            {projects.map((project, index) => (
+              <ProjectCard key={index} project={project} index={index} />
+            ))}
+          </div>
         </div>
       </div>
     </motion.div>
@@ -106,7 +110,8 @@ interface Project {
   tech: string[];
   repo: string;
   label: string;
-  metric: string;
+  source: string;
+  image: string;
 }
 
 interface ProjectCardProps {
@@ -125,36 +130,45 @@ function ProjectCard({ project, index }: ProjectCardProps) {
     >
       <div className="h-6 bg-[var(--primary)] border-b border-black px-2 flex items-center justify-between">
         <span className="font-mono text-[11px] text-[var(--deep-black)]">{project.label}</span>
-        <span className="font-mono text-[11px] text-[var(--deep-black)]">min</span>
+        <span className="font-mono text-[11px] text-[var(--deep-black)]">{project.source}</span>
       </div>
 
-      <div className="p-4 space-y-4 flex-1 flex flex-col">
+      <div className="p-3 space-y-3 flex-1 flex flex-col">
         <div className="flex items-start justify-between gap-4">
           <h3 className="font-mono text-xl text-[var(--metallic-silver)]">{project.title}</h3>
-          <span className="px-2 py-0.5 border border-[var(--dark-grey)] bg-[var(--card)] font-mono text-[11px] text-[var(--muted-foreground)]">
-            LIVE
-          </span>
         </div>
 
-        <div className="border border-[var(--dark-grey)] bg-[var(--card)] p-2">
-          <p className="text-[var(--muted-foreground)] text-xs leading-relaxed font-mono">{project.description}</p>
+        <div className="flex items-stretch gap-3">
+          <div className="w-28 shrink-0 overflow-hidden border border-[var(--dark-grey)] bg-black/40">
+            <img
+              src={project.image}
+              alt={`${project.title} preview`}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              loading="lazy"
+            />
+          </div>
+
+          <div className="min-w-0 flex-1 space-y-2">
+            <div className="border border-[var(--dark-grey)] bg-[var(--card)] p-2">
+              <p className="text-[var(--muted-foreground)] text-xs leading-relaxed font-mono">{project.description}</p>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {project.tech.map((tech, techIndex) => (
+                <span
+                  key={techIndex}
+                  className="px-2 py-0.5 bg-black border border-[var(--dark-grey)] font-mono text-[11px] text-[var(--metallic-accent)]"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          {project.tech.map((tech, techIndex) => (
-            <span
-              key={techIndex}
-              className="px-2 py-0.5 bg-black border border-[var(--dark-grey)] font-mono text-[11px] text-[var(--metallic-accent)]"
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
-
-        <div className="mt-auto pt-3 border-t border-dashed border-[var(--dark-grey)] flex items-center justify-between gap-2">
-          <span className="font-mono text-[11px] text-[var(--muted-foreground)]">{project.metric}</span>
+        <div className="mt-auto pt-2 border-t border-dashed border-[var(--dark-grey)] flex items-center justify-end gap-2">
           <a href={project.repo} target="_blank" rel="noopener noreferrer" className="mechanical-button px-3 py-1 font-mono text-[11px] inline-flex items-center gap-1">
-            VIEW_REPO <ExternalLink className="w-3 h-3" />
+            View <ExternalLink className="w-3 h-3" />
           </a>
         </div>
       </div>

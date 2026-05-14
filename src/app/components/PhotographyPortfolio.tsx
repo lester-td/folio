@@ -84,75 +84,66 @@ export function PhotographyPortfolio({ scrollProgress }: PhotographyPortfolioPro
 
   return (
     <motion.div
-      className="min-h-screen py-16 px-4 md:px-8 bg-[var(--deep-black)]"
+      className="min-h-screen py-16 px-4 md:px-8"
       style={{
         opacity,
       }}
     >
       <div className="max-w-[2000px] mx-auto">
-        {/* Section header */}
-        <div className="mb-4 h-14 border border-[var(--dark-grey)] bg-[var(--card)] px-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <h2 className="font-mono text-base md:text-2xl text-[var(--metallic-silver)]">PHOTO_ARCHIVE</h2>
-            <span className="font-mono text-xs text-[var(--metallic-accent)]">{galleries[currentGallery].title}</span>
-          </div>
-        </div>
-
-        {/* Album selector */}
-        <div className="mb-5 border border-[var(--dark-grey)] bg-[var(--secondary)] px-3 py-3 flex items-center gap-3 overflow-x-auto">
-          <button onClick={prevGallery} className="mechanical-button px-2 py-1 shrink-0">
-            <ChevronLeft className="w-5 h-5 text-[var(--metallic-accent)]" />
-          </button>
-
-          <div className="flex gap-2 min-w-max">
-            {galleries.map((gallery, index) => (
-              <button
-                key={gallery.id}
-                onClick={() => setCurrentGallery(index)}
-                className={`group relative px-4 py-2 border font-mono text-sm transition-all ${
-                  currentGallery === index
-                    ? "border-[var(--metallic-silver)] bg-[var(--dark-grey)] text-[var(--metallic-silver)]"
-                    : "border-[var(--dark-grey)] bg-[var(--secondary)] text-[var(--metallic-accent)] hover:border-[var(--metallic-accent)]"
-                }`}
-              >
-                <span className="hidden md:inline">{gallery.title}</span>
-                <span className="md:hidden">{index + 1}</span>
-                {currentGallery === index && (
-                  <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[var(--metallic-silver)]" />
-                )}
-              </button>
-            ))}
+        <div className="border border-[var(--dark-grey)]">
+          <div className="h-6 border-b border-black bg-[var(--primary)] px-2 flex items-center justify-between">
+            <span className="font-mono text-[11px] text-[var(--deep-black)] tracking-wide">lester.page</span>
+            <span className="font-mono text-[11px] text-[var(--deep-black)] lowercase">photo | {galleries[currentGallery].title}</span>
           </div>
 
-          <button onClick={nextGallery} className="mechanical-button px-2 py-1 shrink-0">
-            <ChevronRight className="w-5 h-5 text-[var(--metallic-accent)]" />
-          </button>
-        </div>
+          {/* Album selector */}
+          <div className="mb-3 bg-[var(--secondary)] px-3 py-2 flex items-center gap-2 overflow-x-auto">
+            <button onClick={prevGallery} className="mechanical-button px-2 py-0.5 shrink-0">
+              <ChevronLeft className="w-5 h-5 text-[var(--metallic-accent)]" />
+            </button>
 
-        <p className="font-mono text-xs text-[var(--muted-foreground)] mb-5">{galleries[currentGallery].description}</p>
-
-        <motion.div
-          key={currentGallery}
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-          className="overflow-auto max-h-[calc(100vh-14rem)] pr-1"
-        >
-          <ResponsiveMasonry columnsCountBreakPoints={{ 0: 1, 768: 2, 1024: 3, 1280: 4 }}>
-            <Masonry gutter="10px">
-              {galleries[currentGallery].images.map((image, index) => (
-                <GalleryImage key={index} src={image} index={index} />
+            <div className="flex gap-2 min-w-max">
+              {galleries.map((gallery, index) => (
+                <button
+                  key={gallery.id}
+                  onClick={() => setCurrentGallery(index)}
+                  className={`group relative px-4 py-1.5 border font-mono text-sm transition-all ${
+                    currentGallery === index
+                      ? "border-[var(--metallic-silver)] bg-[var(--dark-grey)] text-[var(--metallic-silver)]"
+                      : "border-[var(--dark-grey)] bg-[var(--secondary)] text-[var(--metallic-accent)] hover:border-[var(--metallic-accent)]"
+                  }`}
+                >
+                  <span className="hidden md:inline lowercase">{gallery.title}</span>
+                  <span className="md:hidden">{index + 1}</span>
+                  {currentGallery === index && (
+                    <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[var(--metallic-silver)]" />
+                  )}
+                </button>
               ))}
-            </Masonry>
-          </ResponsiveMasonry>
-        </motion.div>
+            </div>
 
-        {/* Gallery counter */}
-        <div className="mt-8 flex items-center justify-center gap-2 font-mono text-sm text-[var(--metallic-accent)]">
-          <div className="w-2 h-2 bg-[var(--metallic-accent)]" />
-          <span>
-            GALLERY [{currentGallery + 1}/{galleries.length}]
-          </span>
+            <button onClick={nextGallery} className="mechanical-button px-2 py-0.5 shrink-0">
+              <ChevronRight className="w-5 h-5 text-[var(--metallic-accent)]" />
+            </button>
+          </div>
+
+          <div className="overflow-hidden">
+            <motion.div
+              key={currentGallery}
+              initial={{ opacity: 0, x: 24 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.35 }}
+              className="p-3"
+            >
+              <ResponsiveMasonry columnsCountBreakPoints={{ 0: 1, 768: 2, 1024: 3, 1280: 4 }}>
+                <Masonry gutter="10px">
+                  {galleries[currentGallery].images.map((image, index) => (
+                    <GalleryImage key={index} src={image} index={index} />
+                  ))}
+                </Masonry>
+              </ResponsiveMasonry>
+            </motion.div>
+          </div>
         </div>
       </div>
     </motion.div>
@@ -173,14 +164,14 @@ function GalleryImage({ src, index }: GalleryImageProps) {
       className="group relative w-full overflow-hidden border border-[var(--dark-grey)] bg-[var(--card)] hover:border-[var(--metallic-silver)] transition-all duration-300"
     >
       <div className="h-6 bg-[var(--primary)] border-b border-black px-2 flex items-center">
-        <span className="font-mono text-[11px] text-[var(--deep-black)]">IMG_{String(index + 1).padStart(3, "0")}.RAW</span>
+        <span className="font-mono text-[11px] text-[var(--deep-black)]">img_{String(index + 1).padStart(3, "0")}.jpeg</span>
       </div>
 
       <div style={{ aspectRatio: isPortrait ? "3 / 4" : "4 / 3" }}>
         <img
           src={src}
           alt={`Gallery image ${index + 1}`}
-          className="w-full h-full object-cover block transition-transform duration-500 group-hover:scale-105 opacity-85 group-hover:opacity-100"
+          className="w-full h-full object-cover block opacity-85 group-hover:opacity-100"
           loading="lazy"
         />
       </div>

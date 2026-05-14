@@ -19,50 +19,62 @@ export function HeroHub({ scrollProgress }: HeroHubProps) {
     >
       <div className="relative pointer-events-auto w-full max-w-5xl px-4">
         <div className="relative border border-[var(--dark-grey)] bg-[var(--secondary)] shadow-[4px_4px_0_0_#000]">
-          <div className="h-6 border-b border-black bg-[var(--primary)] px-3 flex items-center justify-between">
-            <span className="font-mono text-[11px] text-[var(--deep-black)] tracking-wide">ARCHIVE_01</span>
-            <span className="font-mono text-[11px] text-[var(--deep-black)]">SYSTEM.INIT</span>
+          <div className="h-6 border-b border-black bg-[var(--primary)] px-2 flex items-center justify-between">
+            <span className="font-mono text-[11px] text-[var(--deep-black)] tracking-wide">lester.page</span>
+            <span className="font-mono text-[11px] text-[var(--deep-black)]">links</span>
           </div>
 
           <div className="grid md:grid-cols-[1fr_270px]">
             <div className="p-6 md:p-8 border-b md:border-b-0 md:border-r border-[var(--dark-grey)] bg-[var(--deep-black)]">
-              <h1 className="text-3xl md:text-5xl tracking-tight text-[var(--metallic-silver)]">
-                Lester Thomas
-              </h1>
-              <p className="mt-6 text-[var(--muted-foreground)] leading-relaxed border-l-2 border-[var(--metallic-silver)] pl-4 max-w-xl">
-                Executing high-performance code and capturing structural aesthetics. Bridging logic and visual composition.
-              </p>
-              <div className="mt-6 border border-[var(--dark-grey)] bg-black/40 p-3 font-mono text-xs text-[var(--metallic-accent)]">
-                &gt; SYSTEM.QUERY(USER_SKILLS);
-                <br />
-                &gt; [LOADING MODULES...]
-                <br />
-                <span className="text-[var(--metallic-silver)]">REACT.JS, NODE_ENV, RAW_PROCESSING</span>
+              <div className="flex flex-col md:flex-row md:items-stretch gap-5">
+                <div className="order-2 md:order-2 flex-1 min-w-0">
+                  <h1 className="font-bold text-3xl md:text-5xl tracking-tight text-[var(--metallic-silver)]">
+                    Lester Thomas
+                  </h1>
+                  <p className="mt-6 text-[var(--muted-foreground)] leading-relaxed border-l-2 border-[var(--metallic-silver)] pl-4 max-w-xl">
+                    Information and communication technology student with a passion for web development, photography, and design.
+                  </p>
+                  <div className="mt-6 border border-[var(--dark-grey)] bg-black/40 p-3 font-mono text-xs text-[var(--metallic-accent)]">
+                    &gt; what the fuck do i put here
+                    <br />
+                    &gt; sudo rm -rf /
+                    <br />
+                    <span className="text-[var(--metallic-silver)]">????????????</span>
+                  </div>
+
+                </div>
+
+                <div className="order-1 md:order-1 md:w-44 lg:w-52 md:self-stretch border border-[var(--dark-grey)] bg-[var(--card)] flex items-center justify-center">
+                  <span className="font-mono text-xs tracking-wide text-[var(--muted-foreground)] uppercase">
+                    Profile Photo
+                  </span>
+                </div>
               </div>
             </div>
 
-            <div className="p-6 bg-[var(--card)]">
-              <p className="font-mono text-xs text-[var(--metallic-accent)] mb-3 text-center">EXTERNAL_LINKS</p>
-              <div className="grid gap-3">
-                <SocialButton href="https://github.com" icon={<Github className="w-5 h-5" />} label="GIT_HUB" />
+            <div className="p-6 bg-[var(--card)] flex items-center">
+              <div className="grid gap-4 w-full">
+                <SocialButton href="https://github.com" icon={<Github className="w-5 h-5" />} label="Github" />
                 <SocialButton
                   href="https://linkedin.com"
                   icon={<Linkedin className="w-5 h-5" />}
-                  label="LINKED_IN"
+                  label="Linkedin"
                 />
                 <SocialButton
                   href="https://instagram.com"
                   icon={<Instagram className="w-5 h-5" />}
-                  label="INSTAGRAM"
+                  label="Instagram"
                 />
-                <SocialButton href="mailto:contact@example.com" icon={<Mail className="w-5 h-5" />} label="EMAIL_COMMS" />
+                <SocialButton href="mailto:contact@example.com" icon={<Mail className="w-5 h-5" />} label="Email" />
               </div>
             </div>
           </div>
 
-          <div className="border-t border-[var(--dark-grey)] px-4 py-2 font-mono text-xs text-[var(--metallic-accent)] flex items-center gap-2">
-            <div className="w-2 h-2 bg-[var(--metallic-accent)] animate-pulse" />
-            SCROLL TO EXPLORE
+          <div className="border-t border-[var(--dark-grey)] px-4 py-2 font-mono text-xs text-[var(--metallic-accent)] flex items-center justify-start gap-2">
+            <span className="relative inline-flex h-5 w-8 items-center justify-center">
+              <span className="absolute translate-y-[-2px] text-base text-[var(--metallic-silver)] opacity-80 scale-x-[2]">▼</span>
+            </span>
+            <span className="tracking-wide uppercase text-[11px] text-[var(--metallic-silver)]">scroll to explore</span>
           </div>
         </div>
       </div>
