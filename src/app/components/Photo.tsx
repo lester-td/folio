@@ -1,13 +1,19 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Fancybox } from "@fancyapps/ui";
+import { AnimatePresence, motion } from "motion/react";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
+
+interface GalleryImageAsset {
+  thumb: string;
+  full: string;
+}
 
 interface Gallery {
   id: string;
   title: string;
   description: string;
-  images: string[];
+  images: GalleryImageAsset[];
 }
 
 // Optional manual gallery order. Use folder ids from src/assets/gallery/<id>/.
@@ -19,20 +25,28 @@ const galleryImageModules = import.meta.glob("/src/assets/gallery/*/*.{avif,gif,
   import: "default",
 }) as Record<string, string>;
 
-const galleries = buildGalleries(galleryImageModules);
+const galleryThumbModules = import.meta.glob("/src/assets/gallery-thumbs/*/*.{avif,gif,jpeg,jpg,png,webp}", {
+  eager: true,
+  import: "default",
+}) as Record<string, string>;
 
-function buildGalleries(imageMap: Record<string, string>): Gallery[] {
-  const grouped = new Map<string, string[]>();
+const galleries = buildGalleries(galleryImageModules, galleryThumbModules);
 
-  for (const [path, imageUrl] of Object.entries(imageMap)) {
+function buildGalleries(imageMap: Record<string, string>, thumbMap: Record<string, string>): Gallery[] {
+  const grouped = new Map<string, GalleryImageAsset[]>();
+
+  for (const [path, fullImageUrl] of Object.entries(imageMap)) {
     const match = path.match(/\/gallery\/([^/]+)\//);
     if (!match) {
       continue;
     }
 
     const galleryId = match[1];
+    const thumbPath = path.replace("/gallery/", "/gallery-thumbs/");
+    const thumbImageUrl = thumbMap[thumbPath] ?? fullImageUrl;
+
     const existing = grouped.get(galleryId) ?? [];
-    existing.push(imageUrl);
+    existing.push({ thumb: thumbImageUrl, full: fullImageUrl });
     grouped.set(galleryId, existing);
   }
 
@@ -55,7 +69,7 @@ function buildGalleries(imageMap: Record<string, string>): Gallery[] {
       id,
       title: id.replace(/[-_]+/g, " ").toUpperCase(),
       description: `LOCAL_ASSET_GALLERY :: ${id.toUpperCase()}`,
-      images: images.sort((a, b) => a.localeCompare(b)),
+      images: images.sort((a, b) => a.full.localeCompare(b.full)),
     }));
 
   if (customGalleryOrder.length === 0) {
@@ -111,8 +125,8 @@ export function Photo() {
       }
 
       Fancybox.show(
-        activeGallery.images.map((src) => ({
-          src,
+        activeGallery.images.map((image) => ({
+          src: image.full,
           type: "image",
         })),
         {
@@ -205,21 +219,32 @@ export function Photo() {
             )}
 
             {activeGallery && (
-              <div key={currentGallery} className="overflow-x-hidden">
-                <div className="grid gap-[10px]" style={{ gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))` }}>
-                  {balancedColumns.map((column, columnIndex) => (
-                    <div key={columnIndex} className="flex flex-col gap-[10px]">
-                      {column.map((item) => (
-                        <GalleryImage
-                          key={item.index}
-                          src={item.src}
-                          index={item.index}
-                          onOpenLightbox={openLightbox}
-                        />
-                      ))}
-                    </div>
-                  ))}
-                </div>
+              <div className="overflow-x-hidden">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeGallery.id}
+                    initial={{ opacity: 0, y: 14, scale: 0.985 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 1.01 }}
+                    transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
+                    className="grid gap-[10px]"
+                    style={{ gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))` }}
+                  >
+                    {balancedColumns.map((column, columnIndex) => (
+                      <div key={columnIndex} className="flex flex-col gap-[10px]">
+                        {column.map((item) => (
+                          <GalleryImage
+                            key={item.index}
+                            thumbSrc={item.image.thumb}
+                            fullSrc={item.image.full}
+                            index={item.index}
+                            onOpenLightbox={openLightbox}
+                          />
+                        ))}
+                      </div>
+                    ))}
+                  </motion.div>
+                </AnimatePresence>
               </div>
             )}
           </div>
@@ -230,18 +255,18 @@ export function Photo() {
 }
 
 interface ColumnItem {
-  src: string;
+  image: GalleryImageAsset;
   index: number;
 }
 
-function buildBalancedColumns(images: string[], columnCount: number, ratios: Record<string, number>) {
+function buildBalancedColumns(images: GalleryImageAsset[], columnCount: number, ratios: Record<string, number>) {
   const safeColumnCount = Math.max(1, columnCount);
   const columns: ColumnItem[][] = Array.from({ length: safeColumnCount }, () => []);
   const columnHeights = Array.from({ length: safeColumnCount }, () => 0);
 
   for (let index = 0; index < images.length; index += 1) {
-    const src = images[index];
-    const ratio = ratios[src] ?? 1;
+    const image = images[index];
+    const ratio = ratios[image.thumb] ?? 1;
     const estimatedHeight = 1 / ratio;
     let targetColumn = 0;
 
@@ -251,7 +276,7 @@ function buildBalancedColumns(images: string[], columnCount: number, ratios: Rec
       }
     }
 
-    columns[targetColumn].push({ src, index });
+    columns[targetColumn].push({ image, index });
     // Include a tiny fixed card chrome offset to improve balancing for portrait-heavy sets.
     columnHeights[targetColumn] += estimatedHeight + 0.06;
   }
@@ -290,13 +315,13 @@ function useResponsiveColumns() {
   return columns;
 }
 
-function useImageAspectRatios(images: string[]) {
+function useImageAspectRatios(images: GalleryImageAsset[]) {
   const [ratios, setRatios] = useState<Record<string, number>>({});
 
   useEffect(() => {
     let cancelled = false;
 
-    const missingImages = images.filter((src) => ratios[src] === undefined);
+    const missingImages = images.map((image) => image.thumb).filter((src) => ratios[src] === undefined);
     if (missingImages.length === 0) {
       return;
     }
@@ -342,12 +367,13 @@ function useImageAspectRatios(images: string[]) {
 }
 
 interface GalleryImageProps {
-  src: string;
+  thumbSrc: string;
+  fullSrc: string;
   index: number;
   onOpenLightbox: (startIndex: number) => void;
 }
 
-function GalleryImage({ src, index, onOpenLightbox }: GalleryImageProps) {
+function GalleryImage({ thumbSrc, fullSrc, index, onOpenLightbox }: GalleryImageProps) {
   const fileName = `img_${String(index + 1).padStart(3, "0")}`;
 
   return (
@@ -357,7 +383,7 @@ function GalleryImage({ src, index, onOpenLightbox }: GalleryImageProps) {
       </div>
 
       <a
-        href={src}
+        href={fullSrc}
         className="block w-full cursor-zoom-in"
         onClick={(event) => {
           event.preventDefault();
@@ -365,10 +391,11 @@ function GalleryImage({ src, index, onOpenLightbox }: GalleryImageProps) {
         }}
       >
         <img
-          src={src}
+          src={thumbSrc}
           alt={`Gallery image ${index + 1}`}
           className="w-full h-auto block opacity-85 group-hover:opacity-100"
           loading="lazy"
+          decoding="async"
         />
       </a>
     </div>

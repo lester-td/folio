@@ -30,6 +30,12 @@ const NAV_ITEMS: NavItem[] = [
   { id: "blog", label: "blog", icon: FileText, path: "/blog" },
 ];
 
+const galleryThumbModules = import.meta.glob("/src/assets/gallery-thumbs/*/*.{avif,gif,jpeg,jpg,png,webp}", {
+  eager: true,
+  import: "default",
+}) as Record<string, string>;
+const galleryThumbUrls = Object.values(galleryThumbModules).sort((a, b) => a.localeCompare(b));
+
 function resolveSection(pathname: string): SectionId {
   if (pathname.startsWith("/blog")) {
     return "blog";
@@ -56,6 +62,23 @@ export default function App() {
   const activeSection = resolveSection(location.pathname);
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
+  const hasPreloadedThumbs = useRef(false);
+
+  useEffect(() => {
+    if (location.pathname !== "/" || hasPreloadedThumbs.current) {
+      return;
+    }
+
+    hasPreloadedThumbs.current = true;
+
+    galleryThumbUrls.forEach((src) => {
+      const image = new Image();
+      image.decoding = "sync";
+      image.loading = "eager";
+      image.setAttribute("fetchpriority", "high");
+      image.src = src;
+    });
+  }, [location.pathname]);
 
   useEffect(() => {
     const applyScrollLock = () => {
