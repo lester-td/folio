@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-import { Github, Linkedin, Instagram, Mail, Code2, Camera } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Github, Linkedin, Instagram, Mail, Code2, Camera, FileText } from "lucide-react";
+import profilePic from "../../assets/images/profile.gif";
 
-interface HeroHubProps {
-  onNavigate: (sectionId: "code" | "photo") => void;
-}
-
-export function HeroHub({ onNavigate }: HeroHubProps) {
+export function Links() {
   const [now, setNow] = useState(new Date());
 
   const getOrdinalDay = (day: number) => {
@@ -43,7 +41,7 @@ export function HeroHub({ onNavigate }: HeroHubProps) {
 
   return (
     <div className="w-full h-full overflow-hidden flex items-center justify-center px-3 py-3 sm:px-4 sm:py-4 md:py-12 lg:py-16">
-      <div className="relative w-full max-w-6xl">
+      <div className="relative w-full max-w-5xl">
         <div className="relative border border-[var(--dark-grey)] bg-[var(--secondary)] shadow-[4px_4px_0_0_#000]">
           <div className="h-6 border-b border-black bg-[var(--primary)] px-2 flex items-center justify-between">
             <span className="font-mono text-[11px] text-[var(--deep-black)] tracking-wide">lester.page</span>
@@ -65,13 +63,15 @@ export function HeroHub({ onNavigate }: HeroHubProps) {
                     <br />
                     &gt; local time {formatLocalTime(now)}
                   </div>
-
                 </div>
 
                 <div className="order-1 w-28 h-28 sm:w-36 sm:h-36 md:w-44 md:h-44 lg:w-52 lg:h-52 self-start border border-[var(--dark-grey)] bg-[var(--card)] flex items-center justify-center">
-                  <span className="font-mono text-xs tracking-wide text-[var(--muted-foreground)] uppercase">
-                    Profile Photo
-                  </span>
+                  <img
+                    src={profilePic}
+                    alt="Profile picture of Lester Thomas"
+                    className="w-full h-full object-cover block"
+                    loading="eager"
+                  />
                 </div>
               </div>
             </div>
@@ -80,41 +80,50 @@ export function HeroHub({ onNavigate }: HeroHubProps) {
               <div className="w-full space-y-2.5">
                 <section className="border border-[var(--dark-grey)] bg-black/40">
                   <div className="h-6 border-b border-[var(--dark-grey)] px-2 flex items-center bg-[var(--deep-black)]">
-                    <span className="font-mono text-[10px] tracking-wide uppercase text-[var(--metallic-silver)]">portfolios</span>
+                    <span className="font-mono text-[10px] tracking-wide uppercase text-[var(--metallic-silver)]">site sections</span>
                   </div>
-                  <div className="p-2 flex flex-wrap gap-2 sm:grid sm:grid-cols-2 sm:gap-2">
-                    <PortfolioButton
-                      icon={<Code2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+                  <div className="p-2 flex flex-wrap gap-2 md:grid md:grid-cols-2 md:gap-2">
+                    <PortfolioLink
+                      icon={<Code2 className="w-3.5 h-3.5 md:w-4 md:h-4" />}
                       label="Code"
-                      onClick={() => onNavigate("code")}
-                      ariaLabel="Switch to code page"
+                      to="/code"
+                      ariaLabel="Go to code page"
+                      toneClass="pastel-button !bg-[#f8d7e5] hover:!bg-[#f4c7db]"
                     />
-                    <PortfolioButton
-                      icon={<Camera className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+                    <PortfolioLink
+                      icon={<Camera className="w-3.5 h-3.5 md:w-4 md:h-4" />}
                       label="Photo"
-                      onClick={() => onNavigate("photo")}
-                      ariaLabel="Switch to photo page"
+                      to="/photo"
+                      ariaLabel="Go to photo page"
+                      toneClass="pastel-button !bg-[#d8f0ff] hover:!bg-[#c5e7ff]"
+                    />
+                    <PortfolioLink
+                      icon={<FileText className="w-3.5 h-3.5 md:w-4 md:h-4" />}
+                      label="Blog"
+                      to="/blog"
+                      ariaLabel="Go to blog page"
+                      toneClass="pastel-button !bg-[#dff5db] hover:!bg-[#cdeec7]"
                     />
                   </div>
                 </section>
 
                 <section className="border border-[var(--dark-grey)] bg-black/40">
                   <div className="h-6 border-b border-[var(--dark-grey)] px-2 flex items-center bg-[var(--deep-black)]">
-                    <span className="font-mono text-[10px] tracking-wide uppercase text-[var(--metallic-silver)]">links</span>
+                    <span className="font-mono text-[10px] tracking-wide uppercase text-[var(--metallic-silver)]">socials & links</span>
                   </div>
-                  <div className="p-2 flex flex-wrap gap-2 sm:grid sm:grid-cols-2 sm:gap-2">
-                    <SocialButton href="https://github.com" icon={<Github className="w-4 h-4 sm:w-5 sm:h-5" />} label="Github" />
+                  <div className="p-2 flex flex-wrap gap-2 md:grid md:grid-cols-2 md:gap-2">
+                    <SocialButton href="https://github.com" icon={<Github className="w-4 h-4 md:w-5 md:h-5" />} label="Github" />
                     <SocialButton
                       href="https://linkedin.com"
-                      icon={<Linkedin className="w-4 h-4 sm:w-5 sm:h-5" />}
+                      icon={<Linkedin className="w-4 h-4 md:w-5 md:h-5" />}
                       label="Linkedin"
                     />
                     <SocialButton
                       href="https://instagram.com"
-                      icon={<Instagram className="w-4 h-4 sm:w-5 sm:h-5" />}
+                      icon={<Instagram className="w-4 h-4 md:w-5 md:h-5" />}
                       label="Instagram"
                     />
-                    <SocialButton href="mailto:contact@example.com" icon={<Mail className="w-4 h-4 sm:w-5 sm:h-5" />} label="Email" />
+                    <SocialButton href="mailto:contact@example.com" icon={<Mail className="w-4 h-4 md:w-5 md:h-5" />} label="Email" />
                   </div>
                 </section>
               </div>
@@ -132,24 +141,24 @@ interface SocialButtonProps {
   label: string;
 }
 
-interface PortfolioButtonProps {
+interface PortfolioLinkProps {
   icon: React.ReactNode;
   label: string;
-  onClick: () => void;
+  to: string;
   ariaLabel: string;
+  toneClass?: string;
 }
 
-function PortfolioButton({ icon, label, onClick, ariaLabel }: PortfolioButtonProps) {
+function PortfolioLink({ icon, label, to, ariaLabel, toneClass = "" }: PortfolioLinkProps) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="mechanical-button w-auto sm:w-full px-1.5 py-1.5 sm:px-2 sm:py-2 font-mono text-[10px] sm:text-[11px] tracking-wide lowercase inline-flex items-center justify-start gap-1.5 sm:gap-2"
+    <Link
+      to={to}
+      className={`mechanical-button w-auto md:w-full pl-1 pr-1.5 py-1.5 md:px-2 md:py-2 font-mono text-[10px] md:text-[11px] tracking-wide lowercase inline-flex items-center justify-start gap-1 md:gap-1.5 ${toneClass}`}
       aria-label={ariaLabel}
     >
       {icon}
-      <span>{label}</span>
-    </button>
+      <span className="font-bold">{label}</span>
+    </Link>
   );
 }
 
@@ -159,7 +168,7 @@ function SocialButton({ href, icon, label }: SocialButtonProps) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="mechanical-button w-auto sm:w-full px-1.5 py-1.5 sm:px-2 sm:py-2 font-mono text-[10px] sm:text-[11px] tracking-wide lowercase inline-flex items-center justify-start gap-1.5 sm:gap-2"
+      className="mechanical-button w-auto md:w-full pl-1 pr-1.5 py-1.5 md:px-2 md:py-2 font-mono text-[10px] md:text-[11px] tracking-wide lowercase inline-flex items-center justify-start gap-1 md:gap-1.5"
     >
       <span className="text-[var(--deep-black)]">{icon}</span>
       <span>{label}</span>

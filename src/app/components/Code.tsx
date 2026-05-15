@@ -63,7 +63,7 @@ const projects = [
   },
 ];
 
-export function SoftwarePortfolio() {
+export function Code() {
   return (
     <div className="w-full px-3 py-6 sm:px-4 sm:py-8 md:px-8 md:py-10 lg:px-10">
       <div className="max-w-7xl mx-auto">

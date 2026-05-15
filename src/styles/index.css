@@ -1,3 +1,119 @@
 @import './fonts.css';
 @import './tailwind.css';
 @import './theme.css';
+
+.blog-mdx {
+  color: var(--muted-foreground);
+  font-family: "IBM Plex Mono", "Consolas", "Menlo", monospace;
+  font-size: 11px;
+  line-height: 1.65;
+}
+
+.blog-mdx > * + * {
+  margin-top: 0.6rem;
+}
+
+.blog-mdx h1,
+.blog-mdx h2,
+.blog-mdx h3,
+.blog-mdx h4,
+.blog-mdx h5,
+.blog-mdx h6 {
+  color: var(--metallic-silver);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.blog-mdx p {
+  margin: 0;
+}
+
+.blog-mdx ul,
+.blog-mdx ol {
+  margin: 0;
+  padding-left: 1rem;
+}
+
+.blog-mdx li + li {
+  margin-top: 0.25rem;
+}
+
+.blog-mdx a {
+  color: var(--metallic-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.blog-mdx code {
+  border: 1px solid var(--dark-grey);
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--metallic-accent);
+  padding: 0.05rem 0.3rem;
+}
+
+.blog-mdx pre {
+  margin: 0;
+  border: 1px solid var(--dark-grey);
+  background: rgba(0, 0, 0, 0.65);
+  padding: 0.65rem;
+  overflow-x: auto;
+}
+
+.blog-mdx pre code {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--metallic-silver);
+}
+
+.blog-mdx strong {
+  color: var(--metallic-silver);
+  font-weight: 700;
+}
+
+.blog-mdx em {
+  color: var(--metallic-accent);
+}
+
+.blog-mdx blockquote {
+  margin: 0;
+  border-left: 2px solid var(--metallic-accent);
+  padding-left: 0.75rem;
+  color: var(--metallic-silver);
+}
+
+.blog-mdx hr {
+  border: 0;
+  border-top: 1px dashed var(--dark-grey);
+  margin: 0;
+}
+
+.blog-mdx table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.blog-mdx th,
+.blog-mdx td {
+  border: 1px solid var(--dark-grey);
+  padding: 0.35rem 0.45rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.blog-mdx th {
+  color: var(--metallic-silver);
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.blog-mdx img {
+  display: block;
+  width: 100%;
+  height: auto;
+  padding: 0.5rem 0;
+}
+
+.blog-mdx div:has(> a[data-fancybox]) {
+  padding: 0.5rem 0;
+}
