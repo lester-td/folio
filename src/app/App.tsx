@@ -1,61 +1,205 @@
-import { useRef, useState, useEffect } from "react";
-import { useScroll, motion } from "motion/react";
-import { Terminal, Link2, Code2, Camera } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { motion } from "motion/react";
+import { Link2, Code2, Camera } from "lucide-react";
 import { HeroHub } from "./components/HeroHub";
 import { SoftwarePortfolio } from "./components/SoftwarePortfolio";
 import { PhotographyPortfolio } from "./components/PhotographyPortfolio";
 
 type SectionId = "links" | "code" | "photo";
 
+interface ScrollStageProps {
+  sectionId: SectionId;
+  sectionRef: React.RefObject<HTMLElement>;
+  isActive?: boolean;
+  isMobileLayout?: boolean;
+  isFirst?: boolean;
+  isLast?: boolean;
+  children: React.ReactNode;
+}
+
+function clamp(value: number, min = 0, max = 1) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function interpolateProgress(progress: number, stops: number[], values: number[]) {
+  if (stops.length !== values.length || stops.length === 0) return values[0] ?? 0;
+  if (progress <= stops[0]) return values[0];
+
+  for (let index = 1; index < stops.length; index += 1) {
+    if (progress <= stops[index]) {
+      const segmentStart = stops[index - 1];
+      const segmentEnd = stops[index];
+      const segmentProgress = segmentEnd === segmentStart ? 0 : (progress - segmentStart) / (segmentEnd - segmentStart);
+      const valueStart = values[index - 1];
+      const valueEnd = values[index];
+      return valueStart + (valueEnd - valueStart) * segmentProgress;
+    }
+  }
+
+  return values[values.length - 1];
+}
+
+function ScrollStage({
+  sectionId,
+  sectionRef,
+  isActive = false,
+  isMobileLayout = false,
+  isFirst = false,
+  isLast = false,
+  children,
+}: ScrollStageProps) {
+  const [stageProgress, setStageProgress] = useState(0);
+  const stops = [0.08, 0.22, 0.78, 0.92];
+  const opacityValues = isFirst ? [1, 1, 1, 0] : isLast ? [0, 1, 1, 1] : [0, 1, 1, 0];
+  const scaleValues = isFirst ? [1, 1, 1, 0.9] : isLast ? [1.06, 1, 1, 1] : [1.06, 1, 1, 0.9];
+
+  useEffect(() => {
+    if (isMobileLayout) {
+      setStageProgress(0.5);
+      return;
+    }
+
+    let ticking = false;
+
+    const updateProgress = () => {
+      ticking = false;
+      const node = sectionRef.current;
+      if (!node) return;
+
+      const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+      const absoluteTop = node.getBoundingClientRect().top + window.scrollY;
+      const stageRange = Math.max(node.offsetHeight - viewportHeight, 1);
+      const nextProgress = clamp((window.scrollY - absoluteTop) / stageRange);
+
+      setStageProgress((current) => (Math.abs(current - nextProgress) < 0.001 ? current : nextProgress));
+    };
+
+    const requestUpdate = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(updateProgress);
+    };
+
+    requestUpdate();
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+    window.visualViewport?.addEventListener("resize", requestUpdate);
+    window.visualViewport?.addEventListener("scroll", requestUpdate);
+
+    return () => {
+      window.removeEventListener("scroll", requestUpdate);
+      window.removeEventListener("resize", requestUpdate);
+      window.visualViewport?.removeEventListener("resize", requestUpdate);
+      window.visualViewport?.removeEventListener("scroll", requestUpdate);
+    };
+  }, [isMobileLayout, sectionRef]);
+
+  // Keep animation strictly within the sticky-pinned center window so it never pans upward.
+  const opacity = isMobileLayout ? 1 : interpolateProgress(stageProgress, stops, opacityValues);
+  const scale = isMobileLayout ? 1 : interpolateProgress(stageProgress, stops, scaleValues);
+  const overlapClass = isMobileLayout ? "" : isFirst ? "" : "-mt-[115svh]";
+  const stageZClass = isActive ? "z-30" : "z-10";
+  const stageHeightClass = isMobileLayout ? (isFirst ? "min-h-[100svh]" : "min-h-0") : "min-h-[180svh]";
+  const stickinessClass = isMobileLayout ? (isFirst ? "relative h-[100svh]" : "relative h-auto") : "sticky top-0 h-[100svh]";
+  const alignmentClass = isMobileLayout ? (isFirst ? "items-center" : "items-start") : "items-center";
+  const mobileGapClass =
+    isMobileLayout && sectionId === "code" ? "mb-20 md:mb-24" : isMobileLayout && !isLast ? "mb-6 md:mb-8" : "";
+
+  return (
+    <section
+      ref={sectionRef}
+      data-section-id={sectionId}
+      className={`relative overflow-x-clip ${stageHeightClass} ${overlapClass} ${stageZClass} ${mobileGapClass}`}
+    >
+      <div className={`${stickinessClass} flex ${alignmentClass} justify-center overflow-x-clip`}>
+        <motion.div
+          style={{
+            opacity,
+            scale,
+            transformOrigin: "center center",
+            willChange: "opacity, transform",
+          }}
+          className="w-full"
+        >
+          {children}
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
 export default function App() {
-  const containerRef = useRef<HTMLDivElement>(null);
   const heroSectionRef = useRef<HTMLElement>(null);
   const softwareSectionRef = useRef<HTMLElement>(null);
   const photoSectionRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"],
-  });
-
-  const [scrollProgress, setScrollProgress] = useState(0);
   const [activeSection, setActiveSection] = useState<SectionId>("links");
-  const pendingSectionRef = useRef<SectionId | null>(null);
+  const [isMobileLayout, setIsMobileLayout] = useState(false);
 
   useEffect(() => {
-    return scrollYProgress.on("change", (latest) => {
-      setScrollProgress(latest);
-    });
-  }, [scrollYProgress]);
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    const sync = () => setIsMobileLayout(mediaQuery.matches);
+    sync();
+    mediaQuery.addEventListener("change", sync);
+    return () => mediaQuery.removeEventListener("change", sync);
+  }, []);
 
   useEffect(() => {
-    const sections = [
-      { id: "links" as const, ref: heroSectionRef },
-      { id: "code" as const, ref: softwareSectionRef },
-      { id: "photo" as const, ref: photoSectionRef },
-    ];
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-
-        if (pendingSectionRef.current) return;
-
-        if (visible[0]) {
-          const id = visible[0].target.getAttribute("data-section-id") as SectionId | null;
-          if (id) setActiveSection(id);
-        }
-      },
-      { threshold: [0.25, 0.5, 0.75] }
-    );
-
-    for (const section of sections) {
-      if (section.ref.current) observer.observe(section.ref.current);
+    if (isMobileLayout) {
+      setActiveSection("links");
+      return;
     }
 
-    return () => observer.disconnect();
-  }, []);
+    const sections: Array<{ id: SectionId; ref: React.RefObject<HTMLElement> }> = [
+      { id: "links", ref: heroSectionRef },
+      { id: "code", ref: softwareSectionRef },
+      { id: "photo", ref: photoSectionRef },
+    ];
+    const stops = [0.08, 0.22, 0.78, 0.92];
+
+    let ticking = false;
+
+    const updateActiveSection = () => {
+      ticking = false;
+      const currentScrollY = window.scrollY;
+      const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+      let nextActive: SectionId = sections[0].id;
+      let highestOpacity = -1;
+
+      for (const [index, section] of sections.entries()) {
+        const node = section.ref.current;
+        if (!node) continue;
+        const absoluteTop = node.getBoundingClientRect().top + window.scrollY;
+        const stageRange = Math.max(node.offsetHeight - viewportHeight, 1);
+        const stageProgress = clamp((currentScrollY - absoluteTop) / stageRange);
+        const isFirst = index === 0;
+        const isLast = index === sections.length - 1;
+        const opacityValues = isFirst ? [1, 1, 1, 0] : isLast ? [0, 1, 1, 1] : [0, 1, 1, 0];
+        const sectionOpacity = interpolateProgress(stageProgress, stops, opacityValues);
+
+        if (sectionOpacity > highestOpacity) {
+          highestOpacity = sectionOpacity;
+          nextActive = section.id;
+        }
+      }
+
+      setActiveSection((current) => (current === nextActive ? current : nextActive));
+    };
+
+    const requestUpdate = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(updateActiveSection);
+    };
+
+    requestUpdate();
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+
+    return () => {
+      window.removeEventListener("scroll", requestUpdate);
+      window.removeEventListener("resize", requestUpdate);
+    };
+  }, [isMobileLayout]);
 
   const scrollToSection = (sectionId: SectionId) => {
     const map = {
@@ -65,29 +209,13 @@ export default function App() {
     } as const;
     const target = map[sectionId].current;
     if (!target) return;
-    pendingSectionRef.current = sectionId;
-    target.scrollIntoView({ behavior: "smooth", block: "start" });
 
-    const settle = () => {
-      const el = map[sectionId].current;
-      if (!el) {
-        pendingSectionRef.current = null;
-        return;
-      }
+    const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+    const absoluteTop = target.getBoundingClientRect().top + window.scrollY;
+    const stageRange = Math.max(target.offsetHeight - viewportHeight, 0);
+    const centeredStageY = absoluteTop + stageRange * 0.5;
 
-      const top = el.getBoundingClientRect().top;
-      const arrived = Math.abs(top) <= 6;
-
-      if (arrived) {
-        setActiveSection(sectionId);
-        pendingSectionRef.current = null;
-        return;
-      }
-
-      window.requestAnimationFrame(settle);
-    };
-
-    window.requestAnimationFrame(settle);
+    window.scrollTo({ top: centeredStageY, behavior: "smooth" });
   };
 
   const sidebarButtonClass = (sectionId: SectionId) =>
@@ -98,10 +226,10 @@ export default function App() {
     }`;
 
   return (
-    <div ref={containerRef} className="relative">
+    <div className="relative">
       {/* Background grid pattern */}
       <div className="fixed inset-0 opacity-50 pointer-events-none z-0">
-        <motion.div
+        <div
           className="w-full h-full"
           style={{
             backgroundImage: `
@@ -131,7 +259,7 @@ export default function App() {
           className="mb-10 text-[var(--metallic-silver)]"
           aria-label="Jump to links section"
         >
-          <Terminal className="w-5 h-5" />
+          <img src="/icons/world.ico" alt="" aria-hidden="true" className="w-5 h-5" />
         </button>
         <div className="flex flex-col gap-3">
           <button
@@ -165,22 +293,35 @@ export default function App() {
       </aside>
 
       {/* Main content */}
-      <main className="relative md:ml-16">
+      <main className="relative overflow-x-clip md:ml-16">
+        <ScrollStage
+          sectionId="links"
+          sectionRef={heroSectionRef}
+          isActive={activeSection === "links"}
+          isMobileLayout={isMobileLayout}
+          isFirst
+        >
+          <HeroHub />
+        </ScrollStage>
 
-        {/* Hero Hub - State 1 */}
-        <section ref={heroSectionRef} data-section-id="links" className="min-h-[calc(100vh-2.5rem)] flex items-center justify-center relative">
-          <HeroHub scrollProgress={scrollProgress} />
-        </section>
+        <ScrollStage
+          sectionId="code"
+          sectionRef={softwareSectionRef}
+          isActive={activeSection === "code"}
+          isMobileLayout={isMobileLayout}
+        >
+          <SoftwarePortfolio />
+        </ScrollStage>
 
-        {/* Software Portfolio - State 2 */}
-        <section ref={softwareSectionRef} data-section-id="code" className="min-h-screen relative">
-          <SoftwarePortfolio scrollProgress={scrollProgress} />
-        </section>
-
-        {/* Photography Portfolio - State 3 */}
-        <section ref={photoSectionRef} data-section-id="photo" className="min-h-screen relative">
-          <PhotographyPortfolio scrollProgress={scrollProgress} />
-        </section>
+        <ScrollStage
+          sectionId="photo"
+          sectionRef={photoSectionRef}
+          isActive={activeSection === "photo"}
+          isMobileLayout={isMobileLayout}
+          isLast
+        >
+          <PhotographyPortfolio />
+        </ScrollStage>
       </main>
     </div>
   );

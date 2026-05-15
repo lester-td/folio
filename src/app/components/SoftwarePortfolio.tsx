@@ -1,9 +1,4 @@
-import { motion } from "motion/react";
 import { ExternalLink } from "lucide-react";
-
-interface SoftwarePortfolioProps {
-  scrollProgress: number;
-}
 
 const projects = [
   {
@@ -68,26 +63,11 @@ const projects = [
   },
 ];
 
-export function SoftwarePortfolio({ scrollProgress }: SoftwarePortfolioProps) {
-  const fadeInStart = 0.15;
-  const fadeInEnd = 0.3;
-  const fadeOutStart = 0.45;
-  const fadeOutEnd = 0.62;
-
-  const fadeInProgress = (scrollProgress - fadeInStart) / (fadeInEnd - fadeInStart);
-  const fadeOutProgress = (fadeOutEnd - scrollProgress) / (fadeOutEnd - fadeOutStart);
-
-  const opacity = Math.min(1, Math.max(0, fadeInProgress), Math.max(0, fadeOutProgress));
-
+export function SoftwarePortfolio() {
   return (
-    <motion.div
-      className="min-h-screen py-16 px-4 md:px-8 lg:px-10"
-      style={{
-        opacity,
-      }}
-    >
+    <div className="w-full px-3 py-6 sm:px-4 sm:py-8 md:px-8 lg:px-10">
       <div className="max-w-7xl mx-auto">
-        <div className="border border-[var(--dark-grey)]">
+        <div className="relative border border-[var(--dark-grey)] bg-[var(--secondary)] shadow-[4px_4px_0_0_#000]">
           <div className="h-6 border-b border-black bg-[var(--primary)] px-2 flex items-center justify-between">
             <span className="font-mono text-[11px] text-[var(--deep-black)] tracking-wide">lester.page</span>
             <span className="font-mono text-[11px] text-[var(--deep-black)]">code</span>
@@ -100,7 +80,7 @@ export function SoftwarePortfolio({ scrollProgress }: SoftwarePortfolioProps) {
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -119,27 +99,21 @@ interface ProjectCardProps {
   index: number;
 }
 
-function ProjectCard({ project, index }: ProjectCardProps) {
+function ProjectCard({ project }: ProjectCardProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1 }}
-      viewport={{ once: true }}
-      className="group relative bg-[var(--deep-black)] hover:bg-black transition-colors duration-300 min-h-[320px] flex flex-col"
-    >
+    <div className="group relative bg-[var(--deep-black)] hover:bg-black transition-colors duration-300 md:min-h-[300px] lg:min-h-[320px] flex flex-col">
       <div className="h-6 bg-[var(--primary)] border-b border-black px-2 flex items-center justify-between">
         <span className="font-mono text-[11px] text-[var(--deep-black)]">{project.label}</span>
         <span className="font-mono text-[11px] text-[var(--deep-black)]">{project.source}</span>
       </div>
 
-      <div className="p-3 space-y-3 flex-1 flex flex-col">
+      <div className="p-3 sm:p-4 space-y-3 flex-1 flex flex-col">
         <div className="flex items-start justify-between gap-4">
-          <h3 className="font-mono text-xl text-[var(--metallic-silver)]">{project.title}</h3>
+          <h3 className="font-mono text-lg sm:text-xl text-[var(--metallic-silver)]">{project.title}</h3>
         </div>
 
-        <div className="flex items-stretch gap-3">
-          <div className="w-28 shrink-0 overflow-hidden border border-[var(--dark-grey)] bg-black/40">
+        <div className="flex items-start gap-3 lg:items-stretch">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 self-start shrink-0 overflow-hidden border border-[var(--dark-grey)] bg-black/40">
             <img
               src={project.image}
               alt={`${project.title} preview`}
@@ -150,7 +124,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
 
           <div className="min-w-0 flex-1 space-y-2">
             <div className="border border-[var(--dark-grey)] bg-[var(--card)] p-2">
-              <p className="text-[var(--muted-foreground)] text-xs leading-relaxed font-mono">{project.description}</p>
+              <p className="text-[var(--muted-foreground)] text-[11px] sm:text-xs leading-relaxed font-mono">{project.description}</p>
             </div>
 
             <div className="flex flex-wrap gap-2">
@@ -172,6 +146,6 @@ function ProjectCard({ project, index }: ProjectCardProps) {
           </a>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

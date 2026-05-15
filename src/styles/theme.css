@@ -134,6 +134,12 @@
     @apply bg-background text-foreground;
   }
 
+  /* Prevent global horizontal bleed from transformed stage content. */
+  html,
+  body {
+    overflow-x: clip;
+  }
+
   /**
   * Default typography styles for HTML elements (h1-h4, p, label, button, input).
   * These are in @layer base, so Tailwind utility classes (like text-sm, text-lg) automatically override them.
