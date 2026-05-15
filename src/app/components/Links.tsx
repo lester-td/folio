@@ -4,7 +4,7 @@ import { Github, Linkedin, Instagram, Mail, Code2, Camera, FileText } from "luci
 import profilePic from "../../assets/images/profile.gif";
 
 export function Links() {
-  const [now, setNow] = useState<Date | null>(null);
+  const [now, setNow] = useState(() => new Date());
   const singaporeTimeZone = "Asia/Singapore";
   const singaporeTimeApiUrl = "https://worldtimeapi.org/api/timezone/Asia/Singapore";
 
@@ -48,12 +48,7 @@ export function Links() {
 
   useEffect(() => {
     const timerId = window.setInterval(() => {
-      setNow((current) => {
-        if (!current) {
-          return current;
-        }
-        return new Date(current.getTime() + 1000);
-      });
+      setNow((current) => new Date(current.getTime() + 1000));
     }, 1000);
 
     return () => window.clearInterval(timerId);
@@ -68,6 +63,9 @@ export function Links() {
           cache: "no-store",
         });
         if (!response.ok) {
+          if (isMounted) {
+            setNow(new Date());
+          }
           return;
         }
         const data = (await response.json()) as { datetime?: string; unixtime?: number };
@@ -75,13 +73,18 @@ export function Links() {
         const apiTimeMsFromUnix = typeof data.unixtime === "number" ? data.unixtime * 1000 : Number.NaN;
         const apiTimeMs = Number.isNaN(apiTimeMsFromDatetime) ? apiTimeMsFromUnix : apiTimeMsFromDatetime;
         if (Number.isNaN(apiTimeMs)) {
+          if (isMounted) {
+            setNow(new Date());
+          }
           return;
         }
         if (isMounted) {
           setNow(new Date(apiTimeMs));
         }
       } catch {
-        // Keep previous value if the API request fails.
+        if (isMounted) {
+          setNow(new Date());
+        }
       }
     };
 
@@ -116,7 +119,7 @@ export function Links() {
                   <div className="mt-4 sm:mt-6 border border-[var(--dark-grey)] bg-black/40 p-3 font-mono text-[11px] sm:text-xs text-[var(--metallic-accent)] leading-relaxed break-all">
                     &gt; based in singapore
                     <br />
-                    &gt; singapore time {now ? formatSingaporeTime(now) : "loading..."}
+                    &gt; singapore time {formatSingaporeTime(now)}
                   </div>
                 </div>
 
