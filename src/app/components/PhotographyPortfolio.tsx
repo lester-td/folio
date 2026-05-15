@@ -1,5 +1,4 @@
 import { useCallback, useState } from "react";
-import { motion } from "motion/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { Fancybox } from "@fancyapps/ui";
@@ -311,32 +310,33 @@ export function PhotographyPortfolio() {
   };
 
   return (
-    <div className="w-full h-[calc(100dvh-1rem)] px-3 py-2 sm:h-[calc(100dvh-1.5rem)] sm:px-4 sm:py-3 md:h-[calc(100dvh-2rem)] md:px-8 md:py-4">
-      <div className="mx-auto max-w-[2000px] h-full">
-        <div className="relative border border-[var(--dark-grey)] bg-[var(--background)] shadow-[4px_4px_0_0_#000] h-full flex flex-col">
+    <div className="w-full">
+      <div>
+        <div className="sticky top-10 md:top-0 z-20 border border-[var(--dark-grey)] bg-[var(--background)]">
           <div className="h-6 border-b border-black bg-[var(--primary)] px-2 flex items-center justify-between">
             <span className="font-mono text-[11px] text-[var(--deep-black)] tracking-wide">lester.page</span>
-            <span className="font-mono text-[11px] text-[var(--deep-black)] lowercase">photo | {activeGallery.title}</span>
+            <span className="font-mono text-[11px] text-[var(--deep-black)] lowercase">
+              photo | {activeGallery.title} | {activeGallery.images.length} items
+            </span>
           </div>
 
-          <div className="bg-[var(--card)] px-2 py-2 sm:px-3 flex items-center gap-2 overflow-x-auto shrink-0">
-            <button onClick={prevGallery} className="mechanical-button px-2 py-0.5 shrink-0">
+          <div className="bg-[var(--card)] px-2 py-2 sm:px-3 flex items-stretch gap-2 shrink-0">
+            <button onClick={prevGallery} className="mechanical-button px-1.5 py-0.5 shrink-0 self-stretch">
               <ChevronLeft className="w-5 h-5 text-[var(--metallic-accent)]" />
             </button>
 
-            <div className="flex gap-1.5 sm:gap-2 min-w-max">
+            <div className="flex-1 min-w-0 grid grid-cols-4 min-[850px]:grid-cols-7 gap-1.5 sm:gap-2">
               {galleries.map((gallery, index) => (
                 <button
                   key={gallery.id}
                   onClick={() => setCurrentGallery(index)}
-                  className={`group relative px-2.5 sm:px-4 py-1.5 border font-mono text-xs sm:text-sm transition-all ${
+                  className={`group relative px-2 sm:px-2.5 py-1 border font-mono text-[10px] sm:text-xs transition-all ${
                     currentGallery === index
                       ? "border-[var(--metallic-silver)] bg-[var(--dark-grey)] text-[var(--metallic-silver)]"
                       : "border-[var(--dark-grey)] bg-[var(--secondary)] text-[var(--metallic-accent)] hover:border-[var(--metallic-accent)]"
                   }`}
                 >
-                  <span className="hidden lg:inline lowercase">{gallery.title}</span>
-                  <span className="lg:hidden">{index + 1}</span>
+                  <span className="lowercase">{gallery.title}</span>
                   {currentGallery === index && (
                     <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[var(--metallic-silver)]" />
                   )}
@@ -344,27 +344,17 @@ export function PhotographyPortfolio() {
               ))}
             </div>
 
-            <button onClick={nextGallery} className="mechanical-button px-2 py-0.5 shrink-0">
+            <button onClick={nextGallery} className="mechanical-button px-1.5 py-0.5 shrink-0 self-stretch">
               <ChevronRight className="w-5 h-5 text-[var(--metallic-accent)]" />
             </button>
           </div>
+        </div>
 
-          <div className="shrink-0 border-t border-[var(--dark-grey)] bg-[var(--secondary)] px-3 py-1.5 flex items-center justify-between gap-3">
-            <p className="min-w-0 truncate font-mono text-[10px] md:text-[11px] text-[var(--metallic-accent)]">
-              {activeGallery.description}
-            </p>
-            <span className="shrink-0 font-mono text-[10px] md:text-[11px] text-[var(--metallic-silver)]">
-              {activeGallery.images.length} items
-            </span>
-          </div>
-
-          <div className="overflow-hidden flex-1 min-h-0">
-            <motion.div
+        <div className="relative border-x border-b border-[var(--dark-grey)] bg-[var(--background)] shadow-[4px_4px_0_0_#000]">
+          <div>
+            <div
               key={currentGallery}
-              initial={{ opacity: 0, x: 24 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.35 }}
-              className="p-2 sm:p-3 h-full overflow-y-auto overflow-x-hidden"
+              className="overflow-x-hidden"
             >
               <ResponsiveMasonry columnsCountBreakPoints={{ 0: 2, 900: 3, 1280: 4 }}>
                 <Masonry gutter="10px" style={{ minHeight: "100%" }}>
@@ -378,7 +368,7 @@ export function PhotographyPortfolio() {
                   ))}
                 </Masonry>
               </ResponsiveMasonry>
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>
@@ -400,10 +390,7 @@ function GalleryImage({ src, index, onOpenLightbox }: GalleryImageProps) {
   const fileName = `img_${String(index + 1).padStart(3, "0")}.jpeg`;
 
   return (
-    <motion.div
-      initial={false}
-      className="group relative w-full overflow-hidden border border-[var(--dark-grey)] bg-[var(--card)] hover:border-[var(--metallic-silver)] transition-all duration-300"
-    >
+    <div className="group relative w-full overflow-hidden border border-[var(--dark-grey)] bg-[var(--card)] hover:border-[var(--metallic-silver)] transition-all duration-300">
       <div className="h-6 bg-[var(--primary)] border-b border-black px-2 flex items-center">
         <span className="font-mono text-[11px] text-[var(--deep-black)]">{fileName}</span>
       </div>
@@ -425,6 +412,6 @@ function GalleryImage({ src, index, onOpenLightbox }: GalleryImageProps) {
           />
         </a>
       </div>
-    </motion.div>
+    </div>
   );
 }

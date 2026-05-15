@@ -65,7 +65,7 @@ const projects = [
 
 export function SoftwarePortfolio() {
   return (
-    <div className="w-full px-3 py-6 sm:px-4 sm:py-8 md:px-8 lg:px-10">
+    <div className="w-full px-3 py-6 sm:px-4 sm:py-8 md:px-8 md:py-10 lg:px-10">
       <div className="max-w-7xl mx-auto">
         <div className="relative border border-[var(--dark-grey)] bg-[var(--secondary)] shadow-[4px_4px_0_0_#000]">
           <div className="h-6 border-b border-black bg-[var(--primary)] px-2 flex items-center justify-between">
