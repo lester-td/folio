@@ -138,6 +138,14 @@
   html,
   body {
     overflow-x: clip;
+    overscroll-behavior-y: none;
+    background: var(--deep-black);
+  }
+
+  body,
+  #root {
+    min-height: 100svh;
+    background: var(--deep-black);
   }
 
   /**
