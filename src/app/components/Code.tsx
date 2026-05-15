@@ -74,8 +74,8 @@ export function Code() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-[var(--dark-grey)]">
-            {projects.map((project, index) => (
-              <ProjectCard key={index} project={project} index={index} />
+            {projects.map((project) => (
+              <ProjectCard key={project.label} project={project} />
             ))}
           </div>
         </div>
@@ -96,7 +96,6 @@ interface Project {
 
 interface ProjectCardProps {
   project: Project;
-  index: number;
 }
 
 function ProjectCard({ project }: ProjectCardProps) {
