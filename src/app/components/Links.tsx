@@ -4,7 +4,9 @@ import { Github, Linkedin, Instagram, Mail, Code2, Camera, FileText } from "luci
 import profilePic from "../../assets/images/profile.gif";
 
 export function Links() {
-  const [now, setNow] = useState(new Date());
+  const [now, setNow] = useState<Date | null>(null);
+  const singaporeTimeZone = "Asia/Singapore";
+  const singaporeTimeApiUrl = "https://worldtimeapi.org/api/timezone/Asia/Singapore";
 
   const getOrdinalDay = (day: number) => {
     if (day % 100 >= 11 && day % 100 <= 13) {
@@ -22,21 +24,74 @@ export function Links() {
     return `${day}th`;
   };
 
-  const formatLocalTime = (date: Date) => {
+  const formatSingaporeTime = (date: Date) => {
     const time = date.toLocaleTimeString("en-SG", {
       hour: "2-digit",
       minute: "2-digit",
       hour12: false,
+      timeZone: singaporeTimeZone,
     });
-    const month = date.toLocaleString("en-SG", { month: "long" }).toLowerCase();
-    const day = getOrdinalDay(date.getDate());
-    return `${time} ${month} ${day}`;
+    const month = date
+      .toLocaleString("en-SG", {
+        month: "long",
+        timeZone: singaporeTimeZone,
+      })
+      .toLowerCase();
+    const day = Number(
+      date.toLocaleString("en-SG", {
+        day: "numeric",
+        timeZone: singaporeTimeZone,
+      }),
+    );
+    return `${time} ${month} ${getOrdinalDay(day)}`;
   };
 
   useEffect(() => {
-    const timerId = window.setInterval(() => setNow(new Date()), 1000);
+    const timerId = window.setInterval(() => {
+      setNow((current) => {
+        if (!current) {
+          return current;
+        }
+        return new Date(current.getTime() + 1000);
+      });
+    }, 1000);
 
     return () => window.clearInterval(timerId);
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const syncWithPublicApi = async () => {
+      try {
+        const response = await fetch(singaporeTimeApiUrl, {
+          cache: "no-store",
+        });
+        if (!response.ok) {
+          return;
+        }
+        const data = (await response.json()) as { datetime?: string; unixtime?: number };
+        const apiTimeMsFromDatetime = typeof data.datetime === "string" ? Date.parse(data.datetime) : Number.NaN;
+        const apiTimeMsFromUnix = typeof data.unixtime === "number" ? data.unixtime * 1000 : Number.NaN;
+        const apiTimeMs = Number.isNaN(apiTimeMsFromDatetime) ? apiTimeMsFromUnix : apiTimeMsFromDatetime;
+        if (Number.isNaN(apiTimeMs)) {
+          return;
+        }
+        if (isMounted) {
+          setNow(new Date(apiTimeMs));
+        }
+      } catch {
+        // Keep previous value if the API request fails.
+      }
+    };
+
+    void syncWithPublicApi();
+    const syncId = window.setInterval(syncWithPublicApi, 5 * 60 * 1000);
+
+    return () => {
+      isMounted = false;
+      window.clearInterval(syncId);
+    };
   }, []);
 
   return (
@@ -61,7 +116,7 @@ export function Links() {
                   <div className="mt-4 sm:mt-6 border border-[var(--dark-grey)] bg-black/40 p-3 font-mono text-[11px] sm:text-xs text-[var(--metallic-accent)] leading-relaxed break-all">
                     &gt; based in singapore
                     <br />
-                    &gt; local time {formatLocalTime(now)}
+                    &gt; singapore time {now ? formatSingaporeTime(now) : "loading..."}
                   </div>
                 </div>
 
