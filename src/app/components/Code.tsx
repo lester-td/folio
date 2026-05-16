@@ -24,6 +24,9 @@ const projects: Project[] = [
     previewType: "icon",
     icon: Globe,
     iconTone: "bg-[#d4f2ff] text-[#0f4c81]",
+    closedSource: false,
+    workInProgress: false,
+    published: true,
   },
   {
     title: "SUSS Planner",
@@ -36,8 +39,11 @@ const projects: Project[] = [
     previewType: "icon",
     icon: CalendarDays,
     iconTone: "bg-[#d8f8e4] text-[#116149]",
+    closedSource: false,
+    workInProgress: false,
+    published: false,
   },
- /* {
+  {
     title: "RafflesGo (CS3213 Project)",
     description:
       "Inspired by NUSmods, it is a web application that helps SUSS students plan their semester by providing an interactive timetable builder.",
@@ -48,7 +54,10 @@ const projects: Project[] = [
     previewType: "icon",
     icon: CalendarDays,
     iconTone: "bg-[#d8f8e4] text-[#116149]",
-  },*/
+    closedSource: false,
+    workInProgress: false,
+    published: false,
+  },
   {
     title: "PDIG Telegram Bot",
     description:
@@ -60,6 +69,9 @@ const projects: Project[] = [
     previewType: "icon",
     icon: Bot,
     iconTone: "bg-[#dbe9ff] text-[#1f4fa0]",
+    closedSource: false,
+    workInProgress: true,
+    published: true,
   },
   {
     title: "SUSS Timetable Scraper",
@@ -72,6 +84,9 @@ const projects: Project[] = [
     previewType: "icon",
     icon: FileText,
     iconTone: "bg-[#ffeccf] text-[#8a4d00]",
+    closedSource: false,
+    workInProgress: false,
+    published: true,
   },
   {
     title: "Win2K Web",
@@ -84,6 +99,9 @@ const projects: Project[] = [
     previewType: "icon",
     icon: Monitor,
     iconTone: "bg-[#f1dcff] text-[#6b2aa0]",
+    closedSource: false,
+    workInProgress: false,
+    published: true
   },
   {
     title: "Flashii Chat Userscripts",
@@ -96,6 +114,9 @@ const projects: Project[] = [
     previewType: "icon",
     icon: Wrench,
     iconTone: "bg-[#ffe1dc] text-[#8f311c]",
+    closedSource: false,
+    workInProgress: false,
+    published: true
   },
 ];
 
@@ -115,6 +136,8 @@ const friendBadges: FriendBadge[] = [
 ];
 
 export function Code() {
+  const visibleProjects = projects.filter((project) => project.published);
+
   return (
     <div className="w-full px-3 py-6 sm:px-4 sm:py-8 md:px-8 md:py-10 lg:px-10">
       <div className="max-w-7xl mx-auto">
@@ -125,7 +148,7 @@ export function Code() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-[var(--dark-grey)]">
-            {projects.map((project) => (
+            {visibleProjects.map((project) => (
               <ProjectCard key={project.title} project={project} />
             ))}
           </div>
@@ -163,6 +186,9 @@ interface Project {
   previewType: "icon" | "image";
   icon: LucideIcon;
   iconTone: string;
+  published: boolean;
+  workInProgress?: boolean;
+  closedSource?: boolean;
   image?: string;
   imageAlt?: string;
 }
@@ -182,6 +208,26 @@ interface ProjectCardProps {
   project: Project;
 }
 
+interface StatusIconProps {
+  className?: string;
+}
+
+function WorkInProgressIcon({ className }: StatusIconProps) {
+  return (
+    <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" className={className}>
+      <path d="M9.972 2.508a.5.5 0 0 0-.16-.556l-.178-.129a5 5 0 0 0-2.076-.783C6.215.862 4.504 1.229 2.84 3.133H1.786a.5.5 0 0 0-.354.147L.146 4.567a.5.5 0 0 0 0 .706l2.571 2.579a.5.5 0 0 0 .708 0l1.286-1.29a.5.5 0 0 0 .146-.353V5.57l8.387 8.873A.5.5 0 0 0 14 14.5l1.5-1.5a.5.5 0 0 0 .017-.689l-9.129-8.63c.747-.456 1.772-.839 3.112-.839a.5.5 0 0 0 .472-.334" />
+    </svg>
+  );
+}
+
+function ClosedSourceIcon({ className }: StatusIconProps) {
+  return (
+    <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" className={className}>
+      <path d="M8 0a4 4 0 0 1 4 4v2.05a2.5 2.5 0 0 1 2 2.45v5a2.5 2.5 0 0 1-2.5 2.5h-7A2.5 2.5 0 0 1 2 13.5v-5a2.5 2.5 0 0 1 2-2.45V4a4 4 0 0 1 4-4m0 1a3 3 0 0 0-3 3v2h6V4a3 3 0 0 0-3-3" />
+    </svg>
+  );
+}
+
 function FriendBadgeLink({ badge }: FriendBadgeLinkProps) {
   return (
     <a
@@ -199,6 +245,12 @@ function FriendBadgeLink({ badge }: FriendBadgeLinkProps) {
 function ProjectCard({ project }: ProjectCardProps) {
   const Icon = project.icon;
   const showImagePreview = project.previewType === "image" && Boolean(project.image);
+  const status = project.closedSource
+    ? { label: "Closed Source", icon: ClosedSourceIcon }
+    : project.workInProgress
+      ? { label: "Work in Progress", icon: WorkInProgressIcon }
+      : null;
+  const StatusIcon = status?.icon;
 
   return (
     <div className="group relative bg-[var(--deep-black)] hover:bg-black transition-colors duration-300 md:min-h-[300px] lg:min-h-[320px] flex flex-col">
@@ -253,9 +305,19 @@ function ProjectCard({ project }: ProjectCardProps) {
         </div>
 
         <div className="mt-auto pt-2 border-t border-dashed border-[var(--dark-grey)] flex items-center justify-end gap-2">
-          <a href={project.repo} target="_blank" rel="noopener noreferrer" className="mechanical-button px-3 py-1 font-mono text-[11px] inline-flex items-center gap-1">
-            View <ExternalLink className="w-3 h-3" />
-          </a>
+          {status && StatusIcon ? (
+            <span
+              className="px-3 py-1 font-mono text-[11px] inline-flex items-center gap-1 border border-[var(--dark-grey)] bg-black/40 text-[var(--metallic-accent)]"
+              aria-label={status.label}
+            >
+              <StatusIcon className="w-3 h-3" />
+              {status.label}
+            </span>
+          ) : (
+            <a href={project.repo} target="_blank" rel="noopener noreferrer" className="mechanical-button px-3 py-1 font-mono text-[11px] inline-flex items-center gap-1">
+              View <ExternalLink className="w-3 h-3" />
+            </a>
+          )}
         </div>
       </div>
     </div>
