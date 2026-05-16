@@ -99,7 +99,7 @@ export function Blog() {
           {blogPosts.length === 0 ? (
             <div className="border-t border-[var(--dark-grey)] bg-[var(--deep-black)] p-4">
               <p className="font-mono text-[11px] sm:text-xs text-[var(--muted-foreground)]">
-                No published posts found. Add a `.mdx` file in `src/app/content/blog/posts` with `published: true`.
+                No published posts found.
               </p>
             </div>
           ) : null}

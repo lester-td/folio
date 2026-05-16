@@ -194,7 +194,7 @@ export default function App() {
       >
         <div className="h-full px-2 flex items-center gap-2">
           <Link to="/" className="font-mono text-[12px] tracking-wide text-[var(--metallic-silver)]" aria-label="Go to links page">
-            lester thomas
+            lester's folio
           </Link>
           <div className="ml-auto flex items-center gap-1">
             {NAV_ITEMS.map((item) => {

@@ -99,7 +99,7 @@ export function Links() {
 
   return (
     <div className="w-full h-full overflow-hidden flex items-center justify-center px-3 py-3 sm:px-4 sm:py-4 md:py-12 lg:py-16">
-      <div className="relative w-full max-w-5xl">
+      <div className="w-full max-w-5xl">
         <div className="relative border border-[var(--dark-grey)] bg-[var(--secondary)] shadow-[4px_4px_0_0_#000]">
           <div className="h-6 border-b border-black bg-[var(--primary)] px-2 flex items-center justify-between">
             <span className="font-mono text-[11px] text-[var(--deep-black)] tracking-wide">lester.page</span>
@@ -119,7 +119,7 @@ export function Links() {
                   <div className="mt-4 sm:mt-6 border border-[var(--dark-grey)] bg-black/40 p-3 font-mono text-[11px] sm:text-xs text-[var(--metallic-accent)] leading-relaxed break-all">
                     &gt; based in singapore
                     <br />
-                    &gt; singapore time {formatSingaporeTime(now)}
+                    &gt; my time is {formatSingaporeTime(now)}
                   </div>
                 </div>
 
@@ -170,18 +170,18 @@ export function Links() {
                     <span className="font-mono text-[10px] tracking-wide uppercase text-[var(--metallic-silver)]">socials & links</span>
                   </div>
                   <div className="p-2 flex flex-wrap gap-2 md:grid md:grid-cols-2 md:gap-2">
-                    <SocialButton href="https://github.com" icon={<Github className="w-4 h-4 md:w-5 md:h-5" />} label="Github" />
+                    <SocialButton href="https://github.com/lester-td" icon={<Github className="w-4 h-4 md:w-5 md:h-5" />} label="Github" />
                     <SocialButton
-                      href="https://linkedin.com"
+                      href="https://linkedin.com/in/lestertd/"
                       icon={<Linkedin className="w-4 h-4 md:w-5 md:h-5" />}
                       label="Linkedin"
                     />
                     <SocialButton
-                      href="https://instagram.com"
+                      href="https://instagram.com/lstrtd"
                       icon={<Instagram className="w-4 h-4 md:w-5 md:h-5" />}
                       label="Instagram"
                     />
-                    <SocialButton href="mailto:contact@example.com" icon={<Mail className="w-4 h-4 md:w-5 md:h-5" />} label="Email" />
+                    <SocialButton href="mailto:hello@lestertd.com" icon={<Mail className="w-4 h-4 md:w-5 md:h-5" />} label="Email" />
                   </div>
                 </section>
               </div>
