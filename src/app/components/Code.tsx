@@ -93,7 +93,8 @@ const projects: Project[] = [
     description:
       "Win2K Web is a nostalgic throwback to 1990s UI, featuring a collection of mini-projects and experiments that capture the essence of that era's design.",
     tech: ["HTML", "CSS", "JavaScript"],
-    repo: "https://github.com/lester-td/lester.page",
+    demo: "https://old.lester.page",
+    repo: "https://github.com/lester-td/win2k-web",
     label: "repo_05",
     source: "github",
     previewType: "icon",
@@ -180,6 +181,7 @@ interface Project {
   title: string;
   description: string;
   tech: string[];
+  demo?: string;
   repo: string;
   label: string;
   source: string;
@@ -314,9 +316,21 @@ function ProjectCard({ project }: ProjectCardProps) {
               {status.label}
             </span>
           ) : (
-            <a href={project.repo} target="_blank" rel="noopener noreferrer" className="mechanical-button px-3 py-1 font-mono text-[11px] inline-flex items-center gap-1">
-              View <ExternalLink className="w-3 h-3" />
-            </a>
+            <>
+              {project.demo ? (
+                <a
+                  href={project.demo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mechanical-button px-3 py-1 font-mono text-[11px] inline-flex items-center gap-1"
+                >
+                  Demo <ExternalLink className="w-3 h-3" />
+                </a>
+              ) : null}
+              <a href={project.repo} target="_blank" rel="noopener noreferrer" className="mechanical-button px-3 py-1 font-mono text-[11px] inline-flex items-center gap-1">
+                View <ExternalLink className="w-3 h-3" />
+              </a>
+            </>
           )}
         </div>
       </div>
