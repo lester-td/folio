@@ -101,7 +101,7 @@ const projects: Project[] = [
     iconTone: "bg-[#f1dcff] text-[#6b2aa0]",
     closedSource: false,
     workInProgress: false,
-    published: true
+    published: false,
   },
   {
     title: "Flashii Chat Userscripts",
