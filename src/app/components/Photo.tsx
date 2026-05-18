@@ -67,7 +67,7 @@ function buildGalleries(imageMap: Record<string, string>, thumbMap: Record<strin
     })
     .map(([id, images]) => ({
       id,
-      title: id.replace(/[-_]+/g, " ").toUpperCase(),
+      title: id.replace(/[-_]+/g, " "),
       description: `LOCAL_ASSET_GALLERY :: ${id.toUpperCase()}`,
       images: images.sort((a, b) => a.full.localeCompare(b.full)),
     }));
@@ -194,7 +194,7 @@ export function Photo() {
         <div ref={galleryHeaderRef} className="sticky top-10 md:top-0 z-20 border border-[var(--dark-grey)] bg-[var(--background)]">
           <div className="h-6 border-b border-black bg-[var(--primary)] px-2 flex items-center justify-between">
             <span className="font-mono text-[11px] text-[var(--deep-black)] tracking-wide">lester.page</span>
-            <span className="font-mono text-[11px] text-[var(--deep-black)] lowercase">
+            <span className="font-mono text-[11px] text-[var(--deep-black)]">
               photo | {activeGallery?.title ?? "no galleries"} | {activeGallery?.images.length ?? 0} items
             </span>
           </div>
@@ -215,7 +215,7 @@ export function Photo() {
                       : "border-[var(--dark-grey)] bg-[var(--secondary)] text-[var(--metallic-accent)] hover:border-[var(--metallic-accent)]"
                   }`}
                 >
-                  <span className="lowercase">{gallery.title}</span>
+                  <span>{gallery.title}</span>
                   {currentGallery === index && (
                     <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[var(--metallic-silver)]" />
                   )}
