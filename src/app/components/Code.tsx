@@ -74,11 +74,11 @@ const projects: Project[] = [
     published: true,
   },
   {
-    title: "SUSS Timetable Scraper",
+    title: "SUSS Scraper",
     description:
-      "Convert SUSS timetable PDFs into structured CSV data for easier integration with other applications and services.",
-    tech: ["Python"],
-    repo: "https://github.com/lester-td/suss-timetable-scraper",
+      "Scrapes SUSS course information and class schedules for easier integration with other applications and services. Output provided in JSON and SQL.",
+    tech: ["Node.js", "TypeScript", "Python", "pdfplumber", "postgresql"],
+    repo: "https://github.com/lester-td/suss-scraper",
     label: "repo_04",
     source: "github",
     previewType: "icon",
