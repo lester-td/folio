@@ -169,6 +169,10 @@ export function Photo() {
     setCurrentGallery((prev) => (prev - 1 + galleries.length) % galleries.length);
   };
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [currentGallery]);
+
   return (
     <div className="w-full">
       <div>
