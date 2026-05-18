@@ -100,7 +100,8 @@ function buildGalleries(imageMap: Record<string, string>, thumbMap: Record<strin
 
 export function Photo() {
   const [currentGallery, setCurrentGallery] = useState(0);
-  const photoRootRef = useRef<HTMLDivElement | null>(null);
+  const galleryHeaderRef = useRef<HTMLDivElement | null>(null);
+  const galleryContentRef = useRef<HTMLDivElement | null>(null);
 
   const activeGallery = useMemo(() => {
     if (galleries.length === 0) {
@@ -170,10 +171,27 @@ export function Photo() {
     setCurrentGallery((prev) => (prev - 1 + galleries.length) % galleries.length);
   };
 
+  const scrollToGalleryTop = useCallback(() => {
+    const contentElement = galleryContentRef.current;
+    if (!contentElement) {
+      return;
+    }
+
+    const contentTop = contentElement.getBoundingClientRect().top + window.scrollY;
+    const selectorHeight = galleryHeaderRef.current?.getBoundingClientRect().height ?? 0;
+    const mobileTopbarOffset = window.innerWidth >= 900 ? 0 : 40;
+
+    window.scrollTo({
+      top: Math.max(contentTop - selectorHeight - mobileTopbarOffset, 0),
+      left: 0,
+      behavior: "auto",
+    });
+  }, []);
+
   return (
-    <div ref={photoRootRef} className="w-full">
+    <div className="w-full">
       <div>
-        <div className="sticky top-10 md:top-0 z-20 border border-[var(--dark-grey)] bg-[var(--background)]">
+        <div ref={galleryHeaderRef} className="sticky top-10 md:top-0 z-20 border border-[var(--dark-grey)] bg-[var(--background)]">
           <div className="h-6 border-b border-black bg-[var(--primary)] px-2 flex items-center justify-between">
             <span className="font-mono text-[11px] text-[var(--deep-black)] tracking-wide">lester.page</span>
             <span className="font-mono text-[11px] text-[var(--deep-black)] lowercase">
@@ -211,7 +229,7 @@ export function Photo() {
           </div>
         </div>
 
-        <div className="relative border-x border-b border-[var(--dark-grey)] bg-[var(--background)] shadow-[4px_4px_0_0_#000]">
+        <div ref={galleryContentRef} className="relative border-x border-b border-[var(--dark-grey)] bg-[var(--background)] shadow-[4px_4px_0_0_#000]">
           <div>
             {!activeGallery && (
               <div className="p-6 font-mono text-xs text-[var(--metallic-accent)]">
@@ -223,9 +241,7 @@ export function Photo() {
               <div className="overflow-x-hidden">
                 <AnimatePresence
                   mode="wait"
-                  onExitComplete={() => {
-                    photoRootRef.current?.scrollIntoView({ block: "start", behavior: "auto" });
-                  }}
+                  onExitComplete={scrollToGalleryTop}
                 >
                   <motion.div
                     key={activeGallery.id}
