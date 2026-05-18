@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Fancybox } from "@fancyapps/ui";
 import { AnimatePresence, motion } from "motion/react";
@@ -100,6 +100,7 @@ function buildGalleries(imageMap: Record<string, string>, thumbMap: Record<strin
 
 export function Photo() {
   const [currentGallery, setCurrentGallery] = useState(0);
+  const photoRootRef = useRef<HTMLDivElement | null>(null);
 
   const activeGallery = useMemo(() => {
     if (galleries.length === 0) {
@@ -170,7 +171,7 @@ export function Photo() {
   };
 
   return (
-    <div className="w-full">
+    <div ref={photoRootRef} className="w-full">
       <div>
         <div className="sticky top-10 md:top-0 z-20 border border-[var(--dark-grey)] bg-[var(--background)]">
           <div className="h-6 border-b border-black bg-[var(--primary)] px-2 flex items-center justify-between">
@@ -223,7 +224,7 @@ export function Photo() {
                 <AnimatePresence
                   mode="wait"
                   onExitComplete={() => {
-                    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+                    photoRootRef.current?.scrollIntoView({ block: "start", behavior: "auto" });
                   }}
                 >
                   <motion.div
