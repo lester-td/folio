@@ -1,92 +1,145 @@
 # folio
 
-personal portfolio site built with React + Vite.
+Personal portfolio site built with React + Vite.
 
 ## stack
 
-- React 18
-- TypeScript
-- Vite
+- React 18 + TypeScript
+- Vite 6
 - Tailwind CSS 4
 - MDX (blog posts)
-- Fancybox (image lightbox)
+- Fancybox (image lightbox for photo/blog images)
 
-## local development
+## run locally
 
 ```bash
 npm install
 npm run dev
 ```
 
-Build for production:
+Production build:
 
 ```bash
 npm run build
 ```
 
-## project structure
-
-- `src/app/components/Photo.tsx`: photo galleries page and lightbox behavior
-- `src/app/components/Blog.tsx`: blog list and blog post page UI
-- `src/app/content/blog/index.ts`: MDX import, validation, filtering, sorting
-- `src/app/content/blog/posts/*.mdx`: blog content files
-- `src/assets/gallery/<gallery-id>/*`: full-size gallery images
-- `src/assets/gallery-thumbs/<gallery-id>/*`: generated gallery thumbnails
-- `scripts/generate-thumbs.mjs`: thumbnail generation script
-
-## photos
-
-Photo galleries are auto-built from folders inside `src/assets/gallery`.
-
-- Each folder becomes one gallery tab (example: `portraits`, `events`, `film`)
-- Images are loaded with `import.meta.glob`
-- If a thumbnail exists in `src/assets/gallery-thumbs`, it is used in grid view
-- If no thumbnail exists, the full image is used as fallback
-- Clicking a photo opens the lightbox with full-resolution images
-
-### gallery ordering
-
-Gallery tab order is set manually in `customGalleryOrder` in `src/app/components/Photo.tsx`.
-Any gallery not listed there is appended after the listed galleries.
-
-### generating thumbnails
-
-Run:
+Generate gallery thumbnails:
 
 ```bash
 npm run thumbs
 ```
 
-This script:
+## site structure
+
+The app is routed in `src/app/App.tsx` and currently has 4 top-level pages:
+
+- `/` -> `src/app/components/Links.tsx`: intro card, social links
+- `/code` -> `src/app/components/Code.tsx`: code section with project cards and friends wall
+- `/photo` -> `src/app/components/Photo.tsx`: galleries with lightbox
+- `/blog` -> `src/app/components/Blog.tsx`: blog list with post detail and navigation
+- `/blog/:slug` -> blog post detail page from `Blog.tsx`
+
+`App.tsx` also handles:
+
+- mobile + desktop navigation chrome
+- swipe navigation between top-level pages on mobile
+- animated route transitions
+- initial thumbnail preloading on the links page
+
+## code section
+
+`src/app/components/Code.tsx`
+
+- Projects are declared in a local `projects` array.
+- Only projects with `published: true` are rendered.
+- Card status supports:
+  - `workInProgress: true` -> Work in Progress badge
+  - `closedSource: true` -> Closed Source badge
+- Cards can show:
+  - repo link (`repo`)
+  - optional live demo button (`demo`)
+- Friend badges are declared in `friendBadges` and rendered as external links.
+
+To add a new project, append one object to the `projects` array in `Code.tsx`.
+
+## photo section
+
+`src/app/components/Photo.tsx`
+
+Photo galleries are generated automatically from assets.
+
+- Source images: `src/assets/gallery/<gallery-id>/*`
+- Thumbnails: `src/assets/gallery-thumbs/<gallery-id>/*`
+- Images are loaded with `import.meta.glob`.
+- If a thumbnail is missing, full image is used as fallback.
+- Clicking an image opens Fancybox with full-resolution files.
+- Gallery order is controlled by `customGalleryOrder` in `Photo.tsx`.
+
+`npm run thumbs` creates/updates thumbnails:
 
 - scans `src/assets/gallery`
-- creates matching files in `src/assets/gallery-thumbs`
-- converts output to `.webp` (max width `640`, quality `70`)
+- writes matching `.webp` files to `src/assets/gallery-thumbs`
+- max width `640`, quality `70`
 
-## blog posts (MDX)
+### adding more photos
 
-Create posts in `src/app/content/blog/posts` using `.mdx`.
+1. Pick an existing album folder in `src/assets/gallery` (example: `src/assets/gallery/portraits`).
+2. Convert new JPEGs to full-resolution WebP files.
+3. Add those WebP files into the album folder.
+4. Run `npm run thumbs` to generate/update thumbnails.
+5. Start or refresh the dev server (`npm run dev`) and open `/photo`.
 
-Required frontmatter fields:
+Notes:
+
+- Supported source extensions are `.jpg`, `.jpeg`, `.png`, `.webp`, `.avif`.
+- New photos are discovered automatically through `import.meta.glob`.
+- If a thumbnail is missing, the full-size image is still shown.
+
+### creating new albums
+
+1. Create a new folder under `src/assets/gallery`, for example `src/assets/gallery/travel-japan`.
+2. Convert your source JPEGs to full-resolution WebP files.
+3. Add those WebP files into that folder.
+4. Run `npm run thumbs` so `src/assets/gallery-thumbs/travel-japan` is generated.
+5. Open `/photo`; the new folder appears as a new album tab automatically.
+
+Album naming behavior:
+
+- Folder name becomes album id.
+- Display title is auto-generated from folder name by replacing `-`/`_` with spaces.
+- Example: `travel-japan_2026` -> `travel japan 2026`.
+
+### album order control
+
+- Album order is defined in `customGalleryOrder` inside `src/app/components/Photo.tsx`.
+- Add your new album id to that array to pin its position.
+- Albums not listed there are appended after listed albums.
+
+## blog section
+
+`src/app/components/Blog.tsx`
+`src/app/content/blog/posts/*.mdx`.
+
+Required frontmatter:
 
 - `title` (string)
 - `summary` (string)
-- `date` (string, recommended format: `YYYY-MM-DD`)
-- `tags` (string array)
+- `date` (string, recommended `YYYY-MM-DD`)
+- `tags` (string[])
 - `category` (string)
 
-Optional frontmatter fields:
+Optional frontmatter:
 
-- `time` (string, example: `14:30`)
-- `published` (boolean; set `false` to hide a post)
+- `time` (string, example `14:30`)
+- `published` (boolean, set `false` to hide a post)
 
-Behavior:
+Processing behavior (`src/app/content/blog/index.ts`):
 
-- Posts with invalid frontmatter are skipped (and logged in console)
-- Posts with `published: false` are hidden
-- Posts are sorted newest-first using `date` + optional `time`
+- invalid frontmatter posts are skipped and logged
+- unpublished posts are filtered out
+- posts are sorted newest-first by `date` + optional `time`
 
-Minimal example:
+Minimal post example:
 
 ```mdx
 ---
@@ -101,3 +154,41 @@ published: true
 
 Post body goes here.
 ```
+
+## extending the website
+
+To add a new top-level page (for example `/notes`):
+
+1. Create a new component, for example `src/app/components/Notes.tsx`.
+2. Update `src/app/App.tsx`:
+   - import the new component and icon
+   - extend `SectionId` union
+   - add a new entry in `NAV_ITEMS`
+   - update `resolveSection()` so `/notes` resolves correctly
+   - add `<Route path="/notes" element={<Notes />} />`
+3. Optional: add a shortcut button in `src/app/components/Links.tsx` under `site sections`.
+4. If the page should participate in mobile swipe navigation, keep it as a top-level route and include it in `NAV_ITEMS`.
+
+Example route/nav additions in `App.tsx`:
+
+```tsx
+type SectionId = "links" | "code" | "photo" | "blog" | "notes";
+
+const NAV_ITEMS = [
+  { id: "links", label: "links", icon: Link2, path: "/" },
+  { id: "code", label: "code", icon: Code2, path: "/code" },
+  { id: "photo", label: "photo", icon: Camera, path: "/photo" },
+  { id: "blog", label: "blog", icon: FileText, path: "/blog" },
+  { id: "notes", label: "notes", icon: NotebookText, path: "/notes" },
+];
+
+function resolveSection(pathname: string): SectionId {
+  if (pathname.startsWith("/notes")) return "notes";
+  if (pathname.startsWith("/blog")) return "blog";
+  if (pathname.startsWith("/photo")) return "photo";
+  if (pathname.startsWith("/code")) return "code";
+  return "links";
+}
+```
+
+For nested content under a page (example `/notes/:slug`), add additional `<Route>` entries and keep the top-level route (`/notes`) as the section root.
