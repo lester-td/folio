@@ -169,10 +169,6 @@ export function Photo() {
     setCurrentGallery((prev) => (prev - 1 + galleries.length) % galleries.length);
   };
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-  }, [currentGallery]);
-
   return (
     <div className="w-full">
       <div>
@@ -224,7 +220,12 @@ export function Photo() {
 
             {activeGallery && (
               <div className="overflow-x-hidden">
-                <AnimatePresence mode="wait">
+                <AnimatePresence
+                  mode="wait"
+                  onExitComplete={() => {
+                    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+                  }}
+                >
                   <motion.div
                     key={activeGallery.id}
                     initial={{ opacity: 0, y: 14, scale: 0.985 }}

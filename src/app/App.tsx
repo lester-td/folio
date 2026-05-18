@@ -81,10 +81,6 @@ export default function App() {
   }, [location.pathname]);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-  }, [location.pathname]);
-
-  useEffect(() => {
     const applyScrollLock = () => {
       const shouldLock =
         activeSection === "links" && location.pathname === "/" && window.innerWidth < 900;
@@ -261,7 +257,12 @@ export default function App() {
         onTouchEnd={handleTouchEnd}
       >
         <div className="relative">
-          <AnimatePresence mode="wait">
+          <AnimatePresence
+            mode="wait"
+            onExitComplete={() => {
+              window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+            }}
+          >
             <motion.div
               key={location.pathname}
               initial={{ opacity: 0, scale: 0.96, y: 20 }}
