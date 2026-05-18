@@ -161,7 +161,11 @@ export default function App() {
     }`;
 
   return (
-    <div className="relative min-h-[100svh]">
+    <div
+      className="relative min-h-[100svh]"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       <div className="fixed inset-0 opacity-80 pointer-events-none z-0">
         <div
           className="w-full h-full"
@@ -251,11 +255,7 @@ export default function App() {
         </div>
       </motion.aside>
 
-      <main
-        className="relative mt-10 min-[900px]:mt-0 min-[900px]:ml-16"
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-      >
+      <main className="relative mt-10 min-[900px]:mt-0 min-[900px]:ml-16">
         <div className="relative">
           <AnimatePresence
             mode="wait"
