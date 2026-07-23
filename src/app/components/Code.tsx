@@ -1,4 +1,4 @@
-import { Bot, CalendarDays, ExternalLink, FileText, Globe, Monitor, Wrench, type LucideIcon } from "lucide-react";
+import { Bot, CalendarDays, ExternalLink, FileText, Globe, MapPin, Monitor, Wrench, type LucideIcon } from "lucide-react";
 import aroltdBadge from "../../assets/badges/aroltd.gif";
 import flashMoeBadge from "../../assets/badges/flash-moe.gif";
 import flashiiBadge from "../../assets/badges/flashii.gif";
@@ -44,13 +44,29 @@ const projects: Project[] = [
     published: true,
   },
   {
+    title: "WhereCanSmoke?",
+    description:
+      "Locate designated smoking areas in the NEA Orchard Road No Smoking Zone, rank them by walking distance, and display walking routes.",
+    tech: ["React", "TypeScript", "Vite", "Leaflet", "OneMap", "GeoJSON", "openrouteservice"],
+    demo: "https://wherecansmoke.vercel.app/",
+    repo: "https://github.com/lester-td/wherecansmoke",
+    label: "repo_03",
+    source: "github",
+    previewType: "icon",
+    icon: MapPin,
+    iconTone: "bg-[#dcfce7] text-[#166534]",
+    closedSource: false,
+    workInProgress: false,
+    published: true,
+  },
+  {
     title: "Win2K Web",
     description:
       "Win2K Web is a nostalgic throwback to 1990s UI, featuring a collection of mini-projects and experiments that capture the essence of that era's design.",
     tech: ["HTML", "CSS", "JavaScript"],
     demo: "https://old.lester.page",
     repo: "https://github.com/lester-td/win2k-web",
-    label: "repo_03",
+    label: "repo_04",
     source: "github",
     previewType: "icon",
     icon: Monitor,
@@ -65,7 +81,7 @@ const projects: Project[] = [
       "A data pipeline that extracts SUSS course information from PDFs and generates SQL for PostgreSQL.",
     tech: ["Node.js", "TypeScript", "Python", "pdfplumber", "Tesseract OCR", "PostgreSQL"],
     repo: "https://github.com/lester-td/SUSSplanner/tree/main/scraper",
-    label: "repo_04",
+    label: "repo_05",
     source: "github",
     previewType: "icon",
     icon: FileText,
@@ -80,7 +96,7 @@ const projects: Project[] = [
       "A telegram bot that automates event notifcations and attendance forecasting for the SUSS Production Interest Group.",
     tech: ["Python", "Telegram Bot API"],
     repo: "https://github.com/lester-td/pdig-telegram-bot",
-    label: "repo_05",
+    label: "repo_06",
     source: "github",
     previewType: "icon",
     icon: Bot,
@@ -95,7 +111,7 @@ const projects: Project[] = [
       "A collection of userscripts designed to extend the functionality of a friend's chat platform, adding various quality of life features.",
     tech: ["JavaScript", "HTML", "CSS"],
     repo: "https://patchii.net/lester/flashii-chat-userscripts",
-    label: "repo_06",
+    label: "repo_07",
     source: "patchii",
     previewType: "icon",
     icon: Wrench,
