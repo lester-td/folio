@@ -33,6 +33,7 @@ const projects: Project[] = [
     description:
       "Academic planner for SUSS students, providing course discovery, semester planning, timetable building, and GPA calculators.",
     tech: ["Next.js", "TypeScript", "Tailwind CSS", "Drizzle ORM", "PostgreSQL"],
+    demo: "https://sussplanner.com/",
     repo: "https://github.com/lester-td/SUSSplanner",
     label: "repo_02",
     source: "github",
@@ -62,7 +63,7 @@ const projects: Project[] = [
   {
     title: "Win2K Web",
     description:
-      "Win2K Web is a nostalgic throwback to 1990s UI, featuring a collection of mini-projects and experiments that capture the essence of that era's design.",
+      "A nostalgic throwback to 1990s UI, featuring a collection of mini-projects and experiments that capture the essence of that era's design.",
     tech: ["HTML", "CSS", "JavaScript"],
     demo: "https://old.lester.page",
     repo: "https://github.com/lester-td/win2k-web",
@@ -78,7 +79,7 @@ const projects: Project[] = [
   {
     title: "SUSS Scraper",
     description:
-      "A data pipeline that extracts SUSS course information from PDFs and generates SQL for PostgreSQL.",
+      "Data pipeline that extracts SUSS course information from PDFs and generates SQL for PostgreSQL.",
     tech: ["Node.js", "TypeScript", "Python", "pdfplumber", "Tesseract OCR", "PostgreSQL"],
     repo: "https://github.com/lester-td/SUSSplanner/tree/main/scraper",
     label: "repo_05",
@@ -91,24 +92,24 @@ const projects: Project[] = [
     published: true,
   },
   {
-    title: "PDIG Telegram Bot",
+    title: "Attenalyst",
     description:
-      "A telegram bot that automates event notifcations and attendance forecasting for the SUSS Production Interest Group.",
+      "Telegram bot that automates event notifcations and attendance forecasting.",
     tech: ["Python", "Telegram Bot API"],
-    repo: "https://github.com/lester-td/pdig-telegram-bot",
+    repo: "https://github.com/lester-td/attenalyst",
     label: "repo_06",
     source: "github",
     previewType: "icon",
     icon: Bot,
     iconTone: "bg-[#dbe9ff] text-[#1f4fa0]",
     closedSource: false,
-    workInProgress: true,
+    workInProgress: false,
     published: true,
   },
   {
     title: "Flashii Chat Userscripts",
     description:
-      "A collection of userscripts designed to extend the functionality of a friend's chat platform, adding various quality of life features.",
+      "Collection of userscripts designed to extend the functionality of the Flashii Chat client, adding various quality of life features.",
     tech: ["JavaScript", "HTML", "CSS"],
     repo: "https://patchii.net/lester/flashii-chat-userscripts",
     label: "repo_07",
