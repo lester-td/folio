@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { Github, Linkedin, Instagram, Mail, Code2, Camera, FileText } from "lucide-react";
 import profilePic from "../../assets/images/profile.gif";
@@ -146,21 +146,21 @@ export function Links() {
                       label="Code"
                       to="/code"
                       ariaLabel="Go to code page"
-                      toneClass="pastel-button !bg-[#f8d7e5] hover:!bg-[#f4c7db]"
+                      tone={{ face: "#f8d7e5", hover: "#f4c7db" }}
                     />
                     <PortfolioLink
                       icon={<Camera className="w-3.5 h-3.5 md:w-4 md:h-4" />}
                       label="Photo"
                       to="/photo"
                       ariaLabel="Go to photo page"
-                      toneClass="pastel-button !bg-[#d8f0ff] hover:!bg-[#c5e7ff]"
+                      tone={{ face: "#d8f0ff", hover: "#c5e7ff" }}
                     />
                     <PortfolioLink
                       icon={<FileText className="w-3.5 h-3.5 md:w-4 md:h-4" />}
                       label="Blog"
                       to="/blog"
                       ariaLabel="Go to blog page"
-                      toneClass="pastel-button !bg-[#dff5db] hover:!bg-[#cdeec7]"
+                      tone={{ face: "#dff5db", hover: "#cdeec7" }}
                     />
                   </div>
                 </section>
@@ -204,14 +204,21 @@ interface PortfolioLinkProps {
   label: string;
   to: string;
   ariaLabel: string;
-  toneClass?: string;
+  tone: {
+    face: string;
+    hover: string;
+  };
 }
 
-function PortfolioLink({ icon, label, to, ariaLabel, toneClass = "" }: PortfolioLinkProps) {
+function PortfolioLink({ icon, label, to, ariaLabel, tone }: PortfolioLinkProps) {
   return (
     <Link
       to={to}
-      className={`mechanical-button w-auto md:w-full pl-1 pr-1.5 py-1.5 md:px-2 md:py-2 font-mono text-[10px] md:text-[11px] tracking-wide lowercase inline-flex items-center justify-start gap-1 md:gap-1.5 ${toneClass}`}
+      className="mechanical-button mechanical-button-tinted w-auto md:w-full pl-1 pr-1.5 py-1.5 md:px-2 md:py-2 font-mono text-[10px] md:text-[11px] tracking-wide lowercase inline-flex items-center justify-start gap-1 md:gap-1.5"
+      style={{
+        "--mechanical-face": tone.face,
+        "--mechanical-hover": tone.hover,
+      } as CSSProperties}
       aria-label={ariaLabel}
     >
       {icon}

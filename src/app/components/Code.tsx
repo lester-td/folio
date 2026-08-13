@@ -1,4 +1,5 @@
 import { Bot, CalendarDays, ExternalLink, FileText, Globe, MapPin, Monitor, Wrench, type LucideIcon } from "lucide-react";
+import type { CSSProperties } from "react";
 import aroltdBadge from "../../assets/badges/aroltd.gif";
 import flashMoeBadge from "../../assets/badges/flash-moe.gif";
 import flashiiBadge from "../../assets/badges/flashii.gif";
@@ -24,6 +25,7 @@ const projects: Project[] = [
     previewType: "icon",
     icon: Globe,
     iconTone: "bg-[#d4f2ff] text-[#0f4c81]",
+    buttonTone: { face: "#d4f2ff", text: "#0f4c81" },
     closedSource: false,
     workInProgress: false,
     published: true,
@@ -40,6 +42,7 @@ const projects: Project[] = [
     previewType: "icon",
     icon: CalendarDays,
     iconTone: "bg-[#fff3b0] text-[#6b5300]",
+    buttonTone: { face: "#fff3b0", text: "#6b5300" },
     closedSource: false,
     workInProgress: false,
     published: true,
@@ -56,6 +59,7 @@ const projects: Project[] = [
     previewType: "icon",
     icon: MapPin,
     iconTone: "bg-[#dcfce7] text-[#166534]",
+    buttonTone: { face: "#dcfce7", text: "#166534" },
     closedSource: false,
     workInProgress: false,
     published: true,
@@ -65,13 +69,13 @@ const projects: Project[] = [
     description:
       "A nostalgic throwback to 1990s UI, featuring a collection of mini-projects and experiments that capture the essence of that era's design.",
     tech: ["HTML", "CSS", "JavaScript"],
-    demo: "https://old.lester.page",
     repo: "https://github.com/lester-td/win2k-web",
     label: "repo_04",
     source: "github",
     previewType: "icon",
     icon: Monitor,
     iconTone: "bg-[#f1dcff] text-[#6b2aa0]",
+    buttonTone: { face: "#f1dcff", text: "#6b2aa0" },
     closedSource: false,
     workInProgress: false,
     published: true,
@@ -87,6 +91,7 @@ const projects: Project[] = [
     previewType: "icon",
     icon: FileText,
     iconTone: "bg-[#ffeccf] text-[#8a4d00]",
+    buttonTone: { face: "#ffeccf", text: "#8a4d00" },
     closedSource: false,
     workInProgress: false,
     published: true,
@@ -102,6 +107,7 @@ const projects: Project[] = [
     previewType: "icon",
     icon: Bot,
     iconTone: "bg-[#dbe9ff] text-[#1f4fa0]",
+    buttonTone: { face: "#dbe9ff", text: "#1f4fa0" },
     closedSource: false,
     workInProgress: false,
     published: true,
@@ -117,6 +123,7 @@ const projects: Project[] = [
     previewType: "icon",
     icon: Wrench,
     iconTone: "bg-[#ffe1dc] text-[#8f311c]",
+    buttonTone: { face: "#ffe1dc", text: "#8f311c" },
     closedSource: false,
     workInProgress: false,
     published: true
@@ -190,6 +197,10 @@ interface Project {
   previewType: "icon" | "image";
   icon: LucideIcon;
   iconTone: string;
+  buttonTone: {
+    face: string;
+    text: string;
+  };
   published: boolean;
   workInProgress?: boolean;
   closedSource?: boolean;
@@ -324,13 +335,17 @@ function ProjectCard({ project }: ProjectCardProps) {
                   href={project.demo}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mechanical-button px-3 py-1 font-mono text-[11px] inline-flex items-center gap-1"
+                  className="mechanical-button mechanical-button-tinted px-3 py-1 font-mono text-[11px] inline-flex items-center gap-1"
+                  style={{
+                    "--mechanical-face": project.buttonTone.face,
+                    "--mechanical-text": project.buttonTone.text,
+                  } as CSSProperties}
                 >
-                  Demo <ExternalLink className="w-3 h-3" />
+                  Live Demo <ExternalLink className="w-3 h-3" />
                 </a>
               ) : null}
               <a href={project.repo} target="_blank" rel="noopener noreferrer" className="mechanical-button px-3 py-1 font-mono text-[11px] inline-flex items-center gap-1">
-                View <ExternalLink className="w-3 h-3" />
+                Source Code <ExternalLink className="w-3 h-3" />
               </a>
             </>
           )}

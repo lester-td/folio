@@ -201,22 +201,41 @@
 }
 
 .mechanical-button {
-  border-top: 2px solid #d1d1d1;
-  border-left: 2px solid #d1d1d1;
-  border-bottom: 2px solid #000;
-  border-right: 2px solid #000;
-  background-color: #c6c6c6;
-  color: #131313;
+  --mechanical-face: #c6c6c6;
+  --mechanical-text: #131313;
+  --mechanical-highlight: #d1d1d1;
+  --mechanical-shadow: #000;
+  --mechanical-pressed: #8e9192;
+  border-top: 2px solid var(--mechanical-highlight);
+  border-left: 2px solid var(--mechanical-highlight);
+  border-bottom: 2px solid var(--mechanical-shadow);
+  border-right: 2px solid var(--mechanical-shadow);
+  background-color: var(--mechanical-face);
+  color: var(--mechanical-text);
   transition: all 120ms ease;
 }
 
 .mechanical-button:active {
-  border-top: 2px solid #000;
-  border-left: 2px solid #000;
-  border-bottom: 2px solid #d1d1d1;
-  border-right: 2px solid #d1d1d1;
-  background-color: #8e9192;
+  border-top: 2px solid var(--mechanical-shadow);
+  border-left: 2px solid var(--mechanical-shadow);
+  border-bottom: 2px solid var(--mechanical-highlight);
+  border-right: 2px solid var(--mechanical-highlight);
+  background-color: var(--mechanical-pressed);
   transform: translate(1px, 1px);
+}
+
+.mechanical-button-tinted {
+  --mechanical-highlight: color-mix(in srgb, var(--mechanical-face), white 55%);
+  --mechanical-shadow: color-mix(in srgb, var(--mechanical-face), black 65%);
+  --mechanical-pressed: color-mix(in srgb, var(--mechanical-face), black 18%);
+}
+
+.mechanical-button-tinted:hover {
+  background-color: var(--mechanical-hover, var(--mechanical-face));
+}
+
+.mechanical-button-tinted:active {
+  background-color: var(--mechanical-pressed);
 }
 
 ::-webkit-scrollbar {
